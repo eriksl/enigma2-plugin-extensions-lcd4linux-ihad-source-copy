@@ -1,0 +1,2 @@
+For creating other languages, a POT file you can download from:
+http://www.i-have-a-dreambox.com/wbb2/thread.php?postid=1634882

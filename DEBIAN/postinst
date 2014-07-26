@@ -1,0 +1,14 @@
+#!/bin/sh
+echo copying Python-Modules...
+cp -a /tmp/usb /usr/lib/python2.7/site-packages > /dev/null 2>&1
+cp -a /tmp/icalendar /usr/lib/python2.7 > /dev/null 2>&1
+rm -rf /tmp/usb
+rm -rf /tmp/icalendar
+if [ -f /tmp/.lcd4config ] && [ ! -f /etc/enigma2/lcd4config ] 
+then
+	echo restore Configfile
+	cp /tmp/.lcd4config /etc/enigma2/lcd4config
+	rm -rf /tmp/.lcd4config
+fi
+echo --- please Restart E2 ---
+exit 0
