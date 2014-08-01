@@ -205,6 +205,7 @@ class LCD4linuxConfigweb(resource.Resource):
 			L4log("WebIF: save Config-File")
 			LCD4linux.save()
 			LCD4linux.saveToFile(LCD4config)
+			ConfTimeCheck()
 		if req.args.get("download.y",None) is not None:
 			L4log("WebIF: download Config")
 			req.setResponseCode(http.OK)
@@ -467,10 +468,10 @@ class LCD4linuxConfigweb(resource.Resource):
 		html += "</p></td>\n"
 		if os.path.isfile(CrashFile):
 			html += "<td valign=\"top\" align=\"left\"  bgcolor=\"#000000\">\n"
-			html += "<form method=\"post\"><font color=\"#FFFFFF\">%s</font><br>\n" % _l(_("Crashlog"))
+			html += "<form method=\"post\"><font color=\"#FFFF00\">%s</font><br>\n" % _l(_("Crashlog"))
 			html += "<input type=\"hidden\" name=\"cmd\" value=\"\">\n"
-			html += "<input type=\"button\" value=\"%s\" style=\"font-size:8pt;\" onClick=\"fensterchen()\">\n"  % _l(_("Show"))
-			html += "<input type=\"button\" value=\"%s\" style=\"font-size:8pt;\"   onclick=\"this.form.cmd.value = 'crashdel'; this.form.submit();\">\n"  % _l(_("Delete"))
+			html += "<input type=\"button\" value=\"%s\" style=\"font-size:8pt;background-color:yellow;\" onClick=\"fensterchen()\">\n"  % _l(_("Show"))
+			html += "<input type=\"button\" value=\"%s\" style=\"font-size:8pt;background-color:yellow;\"   onclick=\"this.form.cmd.value = 'crashdel'; this.form.submit();\">\n"  % _l(_("Delete"))
 			html += "</form></td>\n"
 		html += "<td valign=\"top\" align=\"right\"  bgcolor=\"#000000\">\n"
 		html += "<form method=\"post\" enctype=\"multipart/form-data\">\n"
