@@ -14,7 +14,7 @@
 #  Advertise with this Plugin is not allowed.
 #  For other uses, permission from the author is necessary.
 #
-Version = "V4.2-r3"
+Version = "V4.2-r4"
 from __init__ import _
 from enigma import eConsoleAppContainer, eActionMap, iServiceInformation, iFrontendInformation, eDVBResourceManager, eDVBVolumecontrol
 from enigma import getDesktop, getEnigmaVersionString
@@ -216,6 +216,7 @@ GrabTVRunning = False
 TVrunning = False
 BriefLCD = Queue.Queue()
 Briefkasten = Queue.Queue()
+BriefRes = Queue.Queue()
 Brief1 = Queue.Queue()
 Brief2 = Queue.Queue()
 Brief3 = Queue.Queue()
@@ -252,6 +253,7 @@ ScreenSet = [("1", _("Screen 1")), ("2", _("Screen 2")), ("3", _("Screen 3")), (
 OnOffSelect = [("0", _("off")), ("1", _("on"))]
 TimeSelect = [("1", _("5s")), ("2", _("10s")), ("3", _("15s")), ("4", _("20s")), ("6", _("30s")), ("8", _("40s")), ("10", _("50s")), ("12", _("1min")), ("24", _("2min")), ("36", _("3min")), ("48", _("4min")), ("60", _("5min")), ("120", _("10min")), ("240", _("20min")), ("360", _("30min")), ("720", _("60min"))]
 LCDSelect = [("1", _("LCD 1")), ("2", _("LCD 2")), ("12", _("LCD 1+2")), ("3", _("LCD 3")), ("13", _("LCD 1+3")), ("23", _("LCD 2+3")), ("123", _("LCD 1+2+3"))]
+LCDSwitchSelect = [("0", _("LCD 1-3")), ("1", _("LCD 1")), ("2", _("LCD 2")), ("3", _("LCD 3"))]
 LCDType = [("11", _("Pearl (or compatible LCD) 320x240")), ("12", _("Pearl (or compatible LCD) 240x320")), ("121", _("Corby@Pearl 128x128")),
  ("210", _("Samsung SPF-72H 800x480")), ("23", _("Samsung SPF-75H/76H 800x480")), ("24", _("Samsung SPF-87H 800x480")), ("25", _("Samsung SPF-87H old 800x480")), ("26", _("Samsung SPF-83H 800x600")),
  ("29", _("Samsung SPF-85H/86H 800x600")), ("212", _("Samsung SPF-85P/86P 800x600")), ("28", _("Samsung SPF-105P 1024x600")), ("27", _("Samsung SPF-107H 1024x600")), ("213", _("Samsung SPF-107H old 1024x600")),
@@ -275,7 +277,7 @@ CalTypeE = [("0", _("no Dates")), ("D2", _("Dates compact 2 Lines")), ("D3", _("
 CalLayout = [("0", _("Frame")), ("1", _("Underline")), ("2", _("Underline 2"))]
 CalListType = [("D", _("Dates compact")), ("D-", _("Dates compact no Icon")), ("C", _("Dates")), ("C-", _("Dates no Icon"))]
 FritzType = [("L", _("with Icon")), ("L-", _("no Icon")), ("TL", _("with Icon & Targetnumber")), ("TL-", _("no Icon, with Targetnumber"))]
-InfoSensor = [("0", _("no")), ("R", _("rpm/2")), ("r", _("rpm")), ("T", _("C")), ("RT", _("C + rmp/2")), ("rT", _("C + rmp"))]
+InfoSensor = [("0", _("no")), ("R", _("rpm/2")), ("r", _("rpm")), ("T", _("C")), ("RT", _("C + rpm/2")), ("rT", _("C + rpm"))]
 InfoTuner = [("0", _("no")), ("A", _("db")), ("B", _("%")), ("AB", _("db + %")), ("ABC", _("db + % + BER")), ("AC", _("db + BER")), ("BC", _("% + BER"))]
 InfoCPU = [("0", _("no")), ("P", _("%")), ("L0", _("Load@1min")), ("L1", _("Load@5min")), ("PL0", _("% + Load@1min")), ("PL1", _("% + Load@5min"))]
 HddType = [("0", _("show run+sleep")), ("1", _("show run"))]
@@ -310,6 +312,8 @@ LCD4linux.Enable = ConfigYesNo(default = False)
 LCD4linux.L4LVersion = ConfigText(default="0.0r0", fixed_size=False)
 LCD4linux.FastMode = ConfigSelection(choices = [("5", _("Normal (5s)")), ("2", _("Fastmode (2s)"))], default="5")
 LCD4linux.ScreenActive = ConfigSelection(choices = ScreenSet, default="1")
+LCD4linux.ScreenSwitch = ConfigSelection(choices = ScreenSet, default="2")
+LCD4linux.ScreenSwitchLCD = ConfigSelection(choices = LCDSwitchSelect, default="0")
 LCD4linux.ScreenMax = ConfigSelection(choices = ScreenUse, default="1")
 LCD4linux.ScreenTime = ConfigSelection(choices = [("0", _("off"))] + TimeSelect, default="0")
 LCD4linux.ScreenTime2 = ConfigSelection(choices = TimeSelect, default="1")
@@ -2497,10 +2501,10 @@ def doDPF(dev,im,s):
 
 def writeLCD1(s,im,quality,SAVE=True):
 	global SamsungDevice
-	if LCD4linux.LCDType1.value[0] in ["2","3"] and virtBRI(1) not in [0,10]:
+	if LCD4linux.LCDType1.value[0] in ["2","3"] and virtBRI(1) not in [0,10] and SAVE == True:
 		s.im[im] = ImageEnhance.Brightness(s.im[im]).enhance(virtBRI(1))
 	if LCD4linux.LCDType1.value[0] == "1":
-		if SamsungDevice is not None and not (TVrunning == True and "1" in LCD4linux.TVLCD.value):
+		if SamsungDevice is not None:
 			L4log("writing to DPF Device")
 			doDPF(1,im,s)
 		if "1" in LCD4linux.SavePicture.value and SAVE==True:
@@ -2560,7 +2564,7 @@ def writeLCD1(s,im,quality,SAVE=True):
 		if pngutilconnect != 0:
 			pngutil.send(PIC+".png")
 	else:
-		if SamsungDevice is not None and not (TVrunning == True and "1" in LCD4linux.TVLCD.value):
+		if SamsungDevice is not None:
 			L4log("writing to Samsung Device")
 			output = cStringIO.StringIO()
 			s.im[im].save(output, "JPEG") # ,quality=int(quality)
@@ -2587,10 +2591,10 @@ def writeLCD1(s,im,quality,SAVE=True):
 
 def writeLCD2(s,im,quality,SAVE=True):
 	global SamsungDevice2
-	if LCD4linux.LCDType2.value[0] in ["2","3"] and virtBRI(2) not in [0,10]:
+	if LCD4linux.LCDType2.value[0] in ["2","3"] and virtBRI(2) not in [0,10] and SAVE == True:
 		s.im[im] = ImageEnhance.Brightness(s.im[im]).enhance(virtBRI(2))
 	if LCD4linux.LCDType2.value[0] == "1":
-		if SamsungDevice2 is not None and not (TVrunning == True and "2" in LCD4linux.TVLCD.value):
+		if SamsungDevice2 is not None:
 			L4log("writing to DPF2 Device")
 			doDPF(2,im,s)
 		if "2" in LCD4linux.SavePicture.value and SAVE==True:
@@ -2650,7 +2654,7 @@ def writeLCD2(s,im,quality,SAVE=True):
 		if pngutilconnect != 0:
 			pngutil.send(PIC2+".png")
 	else:
-		if SamsungDevice2 is not None and not (TVrunning == True and "2" in LCD4linux.TVLCD.value):
+		if SamsungDevice2 is not None:
 			L4log("writing to Samsung2 Device")
 			output = cStringIO.StringIO()
 			s.im[im].save(output, "JPEG") # ,quality=int(quality)
@@ -2677,10 +2681,10 @@ def writeLCD2(s,im,quality,SAVE=True):
 
 def writeLCD3(s,im,quality,SAVE=True):
 	global SamsungDevice3
-	if LCD4linux.LCDType3.value[0] in ["2","3"] and virtBRI(3) not in [0,10]:
+	if LCD4linux.LCDType3.value[0] in ["2","3"] and virtBRI(3) not in [0,10] and SAVE == True:
 		s.im[im] = ImageEnhance.Brightness(s.im[im]).enhance(virtBRI(3))
 	if LCD4linux.LCDType3.value[0] == "1":
-		if SamsungDevice3 is not None and not (TVrunning == True and "3" in LCD4linux.TVLCD.value):
+		if SamsungDevice3 is not None:
 			L4log("writing to DPF3 Device")
 			doDPF(3,im,s)
 		if "3" in LCD4linux.SavePicture.value and SAVE==True:
@@ -2740,7 +2744,7 @@ def writeLCD3(s,im,quality,SAVE=True):
 		if pngutilconnect != 0:
 			pngutil.send(PIC3+".png")
 	else:
-		if SamsungDevice3 is not None and not (TVrunning == True and "3" in LCD4linux.TVLCD.value):
+		if SamsungDevice3 is not None:
 			L4log("writing to Samsung3 Device")
 			output = cStringIO.StringIO()
 			s.im[im].save(output, "JPEG") # ,quality=int(quality)
@@ -3669,6 +3673,39 @@ def InitWebIF():
 	else:
 		L4log("no WebIf found")
 
+class L4LWorkerRes(Thread):
+	def __init__(self,index,s,session):
+		Thread.__init__(self)
+		self.index = index
+		self.session = session
+		self.s = s
+
+	def run(self):
+		while True:
+			try:
+				para = BriefRes.get()
+#				print "1:",para[0]
+				if len(para) == 2:
+					para[0](para[1])
+				elif len(para) == 4:
+					para[0](para[1],para[2],para[3])
+				elif len(para) == 5:
+					para[0](para[1],para[2],para[3],para[4])
+				elif len(para) == 3:
+					para[0](para[1],para[2])
+				elif len(para) == 7:
+					para[0](para[1],para[2],para[3],para[4],para[5],para[6])
+				elif len(para) == 8:
+					para[0](para[1],para[2],para[3],para[4],para[5],para[6],para[7])
+			except:
+				from traceback import format_exc
+				L4log("Error1:",format_exc() )
+				try:
+					open(CrashFile,"w").write(format_exc())
+				except:
+					pass
+			BriefRes.task_done()
+
 class L4LWorker1(Thread): 
 	def __init__(self,index,s,session):
 		Thread.__init__(self)
@@ -4055,6 +4092,16 @@ class L4LWorker(Thread):
 			try:
 				Pimg = Image.open(ShowPicture)
 				Pimg = Pimg.resize((P3, P4))
+				if Pim==1:
+					Type=LCD4linux.LCDType1.value
+				elif Pim==2:
+					Type=LCD4linux.LCDType2.value
+				elif Pim==3:
+					Type=LCD4linux.LCDType3.value
+				else:
+					Type=""
+				if Type[0] in ["2","3"] and virtBRI(Pim) not in [0,10]:
+					Pimg = ImageEnhance.Brightness(Pimg).enhance(virtBRI(Pim))
 				s.im[Pim].paste(Pimg,(P1,P2))
 				Pimg=None
 			except:
@@ -4225,6 +4272,32 @@ class LCDdisplayFile(Screen):
 			dest = self["LCDfile"].getCurrentDirectory()
 			dest1 = self["LCDfile"].getFilename()
 		self.close(dest,dest1)
+
+class LCDscreenSwitch(Screen):
+	skin = ""
+
+	def __init__(self, session, args = 0):
+		self.session = session
+		Screen.__init__(self, session)
+		self.onLayoutFinish.append(self.layoutFinished)
+		if LCD4linux.ScreenSwitch.value == ScreenActive[0] or ScreenActive[-3:]!=["","",""]:
+			L4LElist.setScreen(0)
+			L4LElist.setHold(False)
+			L4LElist.setHoldKey(False)
+			setScreenActive("1")
+			L4LElist.setRefresh()
+		else:
+			if LCD4linux.ScreenSwitchLCD.value == "0":
+				L4LElist.setScreen(LCD4linux.ScreenSwitch.value)
+				L4LElist.setHold(True)
+			else:
+				L4LElist.setScreen(LCD4linux.ScreenSwitch.value,LCD4linux.ScreenSwitchLCD.value)
+			L4LElist.setHoldKey(True)
+			L4LElist.setRefresh()
+
+	def layoutFinished(self):
+		L4logE("Screen Switch")
+		self.close(True,self.session)
 
 class LCDdisplayConfig(ConfigListScreen,Screen):
 	skin = ""
@@ -4563,6 +4636,8 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 #			if LCD4linux.LCDType1.value[0] == "4" or LCD4linux.LCDType2.value[0] == "4":
 #				self.list1.append(getConfigListEntry(_("Internal TFT Active"), LCD4linux.LCDTFT))
 			self.list1.append(getConfigListEntry(_("Active Screen"), LCD4linux.ScreenActive))
+			self.list1.append(getConfigListEntry(_("Screen Switch Select - Screen"), LCD4linux.ScreenSwitch))
+			self.list1.append(getConfigListEntry(_("Screen Switch Select - LCD"), LCD4linux.ScreenSwitchLCD))
 			self.list1.append(getConfigListEntry(_("Screens used for Changing"), LCD4linux.ScreenMax))
 			self.list1.append(getConfigListEntry(_("Screen 1 Changing Time"), LCD4linux.ScreenTime))
 			if LCD4linux.ScreenTime.value != "0":
@@ -6513,7 +6588,7 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 		if self.SavePicture != LCD4linux.SavePicture.value:
 			rmFiles(PIC + "*.*")
 			self.SavePicture = LCD4linux.SavePicture.value
-		if LCD4linux.TV.value == False:
+		if LCD4linux.TV.value == "0":
 			TVrunning == False
 		if LCD4linux.MJPEGenable1.isChanged() or LCD4linux.MJPEGenable2.isChanged() or LCD4linux.MJPEGenable3.isChanged():
 			MJPEG_start()
@@ -6834,6 +6909,10 @@ class UpdateStatus(Screen):
 		for thread in L4Lthreads: 
 			thread.setDaemon(True) 
 			thread.start() 
+		L4LthreadsRes = [L4LWorkerRes(i,self,session) for i in range(2)]
+		for thread in L4LthreadsRes:
+			thread.setDaemon(True)
+			thread.start()
 		L4Lthreads1 = [L4LWorker1(i,self,session) for i in range(int(LCD4linux.ElementThreads.value))] 
 		for thread in L4Lthreads1: 
 			thread.setDaemon(True) 
@@ -9031,12 +9110,10 @@ def LCD4linuxPIC(self,session):
 # Grab TV
 	def doGrabTV(x,y,lcd,vidosd):
 		global TVrunning
+		L4logE("GrabTV start",lcd)
 		if TVrunning == False:
 			TVrunning = True
-			if lcd in ["1","4","7"]:
-				Brief1.put([doGrabTVthread,x,y,lcd,vidosd])
-			elif lcd in ["2","5","8"]:
-				Brief2.put([doGrabTVthread,x,y,lcd,vidosd])
+			BriefRes.put([doGrabTVthread,x,y,lcd,vidosd])
 
 	class GrabTV:
 		def __init__(self, cmd):
@@ -9062,59 +9139,22 @@ def LCD4linuxPIC(self,session):
 		global SamsungDevice3
 		vt = "-v" if vidosd == "0" else ""
 		self.im[0] = Image.new('RGB', (int(x), int(y)), (0, 0, 0, 0))
-		while TVrunning == True and ScreenActive[0] in LCD4linux.TV.value:
+		while TVrunning == True and getSA(int(lcd)) in LCD4linux.TV.value:
 			GrabTV("/usr/bin/grab %s -j 40 -r %s %stvgrab.jpg" % (vt,x,TMPL))
 			i = 0
-			while GrabTVRunning == True and i < 100:
-				sleep(0.05)
+			while GrabTVRunning == True and i < 500:
+				sleep(0.01)
 				i += 1
 			try:
-				if lcd in ["1","2","3"]:
-					pic = open("%stvgrab.jpg" % TMPL, "rb").read()
-				else:
-					pic = Image.open("%stvgrab.jpg" % TMPL)
+				pic = Image.open("%stvgrab.jpg" % TMPL)
+				self.im[0].paste(pic,(0,0))
 				if TVrunning == True:
 					if lcd == "1":
-						if SamsungDevice is not None:
-							try:
-								self.im[0].paste(pic,(0,0))
-								Brief1.put([Photoframe.write_jpg2frame,SamsungDevice, pic])
-							except:
-								SamsungDevice = None
-								L4log("Samsung 1 write error")
+						Brief1.put([writeLCD1,self,0,LCD4linux.BilderJPEG.value,False])
 					elif lcd == "2":
-						if SamsungDevice2 is not None:
-							try:
-								self.im[0].paste(pic,(0,0))
-								Brief2.put([Photoframe.write_jpg2frame,SamsungDevice2, pic])
-							except:
-								SamsungDevice2 = None
-								L4log("Samsung 2 write error")
-					elif lcd == "4":
-						if SamsungDevice is not None:
-							self.im[0].paste(pic,(0,0))
-							if LCD4linux.LCDRotate1.value != "0":
-								self.im[0]=self.im[0].rotate(int(LCD4linux.LCDRotate1.value))
-							Brief1.put([doDPF,1,0,self])
-					elif lcd == "5":
-						if SamsungDevice2 is not None:
-							self.im[0].paste(pic,(0,0))
-							if LCD4linux.LCDRotate2.value != "0":
-								self.im[0]=self.im[0].rotate(int(LCD4linux.LCDRotate2.value))
-							Brief2.put([doDPF,2,0,self])
-					elif lcd == "7":
-						self.im[0].paste(pic,(0,0))
-						writeLCD1(self,0,LCD4linux.BilderJPEG.value)
-					elif lcd == "8":
-						self.im[0].paste(pic,(0,0))
-						writeLCD2(self,0,LCD4linux.BilderJPEG.value)
-					elif lcd == "9":
-						self.im[0].paste(pic,(0,0))
-						writeLCD3(self,0,LCD4linux.BilderJPEG.value)
-					if LCD4linux.MJPEGenable1.value == True and lcd in ["4","7"]:
-						MJPEG[1].put([0,self])
-					elif LCD4linux.MJPEGenable2.value == True and lcd in ["5","8"]:
-						MJPEG[2].put([0,self])
+						Brief2.put([writeLCD2,self,0,LCD4linux.BilderJPEG.value,False])
+					elif lcd == "3":
+						Brief3.put([writeLCD3,self,0,LCD4linux.BilderJPEG.value,False])
 			except:
 				pass
 				from traceback import format_exc
@@ -9904,13 +9944,6 @@ def LCD4linuxPIC(self,session):
 				for dirname in os.listdir("/proc/stb/sensors"):
 					if dirname.find("temp", 0, 4) == 0:
 						if os.path.isfile("/proc/stb/sensors/%s/value" % dirname) == True:
-#							line = open("/proc/stb/sensors/%s/value" % dirname, "r").readline().strip()
-#							i=0
-#							while len(line)<1 and i<10:
-#								L4log("Sensor-Wait")
-#								i+=1
-#								sleep(0.01)
-#								line = open("/proc/stb/sensors/%s/value" % dirname, "r").readline().strip()
 							tt = int("0"+SensorRead("/proc/stb/sensors/%s/value" % dirname))
 							if m1 < tt:
 								m1 = tt
@@ -11329,16 +11362,10 @@ def LCD4linuxPIC(self,session):
 		self.im[1] = Image.new('RGB', (MAX_W, MAX_H), col_back)
 	self.draw[1] = ImageDraw.Draw(self.im[1])
 	checkTVrunning = False
-	if ScreenActive[0] in LCD4linux.TV.value and "1" in LCD4linux.TVLCD.value:
+	if getSA(1) in LCD4linux.TV.value and "1" in LCD4linux.TVLCD.value:
 		checkTVrunning = True
 		if TVrunning == False:
-			if LCD4linux.LCDType1.value[0] == "1":
-				doGrabTV(str(MAX_W),str(MAX_H),"4",LCD4linux.TVType.value)
-			elif LCD4linux.LCDType1.value[0] == "2":
-				doGrabTV(str(MAX_W),str(MAX_H),"1",LCD4linux.TVType.value)
-			else:
-				doGrabTV(str(MAX_W),str(MAX_H),"7",LCD4linux.TVType.value)
-
+			doGrabTV(str(MAX_W),str(MAX_H),"1",LCD4linux.TVType.value)
 	try:
 		pil_image = None
 		if pil_open != "" and os.path.isfile(pil_open) and not ("1" in LCD4linux.TVLCD.value and ScreenActive[0] in LCD4linux.TV.value):
@@ -11383,15 +11410,10 @@ def LCD4linuxPIC(self,session):
 		if not ("2" in LCD4linux.TVLCD.value and ScreenActive[0] in LCD4linux.TV.value):
 			self.im[2] = Image.new('RGB', (MAX_W, MAX_H), col_back)
 		self.draw[2] = ImageDraw.Draw(self.im[2])
-		if ScreenActive[0] in LCD4linux.TV.value and "2" in LCD4linux.TVLCD.value:
+		if getSA(2) in LCD4linux.TV.value and "2" in LCD4linux.TVLCD.value:
 			checkTVrunning = True
 			if TVrunning == False:
-				if LCD4linux.LCDType2.value[0] == "1":
-					doGrabTV(str(MAX_W),str(MAX_H),"5",LCD4linux.TVType.value)
-				elif LCD4linux.LCDType2.value[0] == "2":
-					doGrabTV(str(MAX_W),str(MAX_H),"2",LCD4linux.TVType.value)
-				else:
-					doGrabTV(str(MAX_W),str(MAX_H),"8",LCD4linux.TVType.value)
+				doGrabTV(str(MAX_W),str(MAX_H),"2",LCD4linux.TVType.value)
 		try:
 			pil_image = None
 			if pil_open != "" and os.path.isfile(pil_open) and not ("2" in LCD4linux.TVLCD.value and ScreenActive[0] in LCD4linux.TV.value):
@@ -11439,6 +11461,10 @@ def LCD4linuxPIC(self,session):
 		if not ("3" in LCD4linux.TVLCD.value and ScreenActive[0] in LCD4linux.TV.value):
 			self.im[3] = Image.new('RGB', (MAX_W, MAX_H), col_back)
 		self.draw[3] = ImageDraw.Draw(self.im[3])
+		if getSA(3) in LCD4linux.TV.value and "3" in LCD4linux.TVLCD.value:
+			checkTVrunning = True
+			if TVrunning == False:
+				doGrabTV(str(MAX_W),str(MAX_H),"3",LCD4linux.TVType.value)
 		try:
 			pil_image = None
 			if pil_open != "" and os.path.isfile(pil_open) and not ("3" in LCD4linux.TVLCD.value and ScreenActive[0] in LCD4linux.TV.value):
@@ -12025,7 +12051,7 @@ def LCD4linuxPIC(self,session):
 	Brief3.join()
 	TimePicture = time() - tt
 
-	if self.Refresh >= LCD4linux.LCDRefresh1.value:
+	if self.Refresh >= LCD4linux.LCDRefresh1.value and not (getSA(1) in LCD4linux.TV.value and "1" in LCD4linux.TVLCD.value):
 		if Dunkel and "1" in Dunkel:
 			MAX_W,MAX_H = self.im[1].size
 			self.draw[1].rectangle((0, 0, MAX_W, MAX_H),fill="black")
@@ -12033,14 +12059,14 @@ def LCD4linuxPIC(self,session):
 		if LCD4linux.LCDRotate1.value != "0":
 			self.im[1]=self.im[1].rotate(int(LCD4linux.LCDRotate1.value))
 		Brief1.put([writeLCD1,self,1,LCD4linux.BilderJPEG.value])
-	if LCD4linux.LCDType2.value != "00" and self.Refresh >= LCD4linux.LCDRefresh2.value:
+	if LCD4linux.LCDType2.value != "00" and self.Refresh >= LCD4linux.LCDRefresh2.value and not (getSA(2) in LCD4linux.TV.value and "2" in LCD4linux.TVLCD.value):
 		if Dunkel and "2" in Dunkel:
 			MAX_W,MAX_H = self.im[2].size
 			self.draw[2].rectangle((0, 0, MAX_W, MAX_H),fill="black")
 		if LCD4linux.LCDRotate2.value != "0":
 			self.im[2]=self.im[2].rotate(int(LCD4linux.LCDRotate2.value))
 		Brief2.put([writeLCD2,self,2,LCD4linux.BilderJPEG.value])
-	if LCD4linux.LCDType3.value != "00" and self.Refresh >= LCD4linux.LCDRefresh3.value:
+	if LCD4linux.LCDType3.value != "00" and self.Refresh >= LCD4linux.LCDRefresh3.value and not (getSA(3) in LCD4linux.TV.value and "3" in LCD4linux.TVLCD.value):
 		if Dunkel and "3" in Dunkel:
 			MAX_W,MAX_H = self.im[3].size
 			self.draw[3].rectangle((0, 0, MAX_W, MAX_H),fill="black")
@@ -12059,6 +12085,8 @@ def LCD4linuxPIC(self,session):
 
 def main(session,**kwargs):
 	session.open(LCDdisplayConfig)
+def screenswitch(session,**kwargs):
+	session.open(LCDscreenSwitch)
 
 def autostart(reason, **kwargs):
 	global session
@@ -12175,4 +12203,9 @@ def Plugins(**kwargs):
 	where = PluginDescriptor.WHERE_PLUGINMENU,
 	icon = "plugin.png",
 	fnc = main))
+	list.append(PluginDescriptor(name=_("LCD4linux Screen Switch"),
+	description="LCD4linux Screen Switch",
+	where = PluginDescriptor.WHERE_EXTENSIONSMENU,
+	icon = "plugin.png",
+	fnc = screenswitch))
 	return list
