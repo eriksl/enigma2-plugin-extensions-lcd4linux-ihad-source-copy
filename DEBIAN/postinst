@@ -1,12 +1,19 @@
 #!/bin/sh
-echo copying Python-Modules...
-cp -a /tmp/usb /usr/lib/python2.7/site-packages > /dev/null 2>&1
-cp -a /tmp/icalendar /usr/lib/python2.7 > /dev/null 2>&1
+if [ ! -f /usr/lib/python2.7/site-packages/usb/util.??? ] 
+then
+	echo "copying Python-Modules (usb)..."
+	cp -a /tmp/usb /usr/lib/python2.7/site-packages > /dev/null 2>&1
+fi
+if [ ! -f /usr/lib/python2.7/icalendar/cal.??? ] 
+then
+	echo "copying Python-Modules (icalendar)..."
+	cp -a /tmp/icalendar /usr/lib/python2.7 > /dev/null 2>&1
+fi
 rm -rf /tmp/usb
 rm -rf /tmp/icalendar
 if [ -f /tmp/.lcd4config ] && [ ! -f /etc/enigma2/lcd4config ] 
 then
-	echo restore Configfile
+	echo "restore Configfile"
 	cp /tmp/.lcd4config /etc/enigma2/lcd4config
 	rm -rf /tmp/.lcd4config
 fi
