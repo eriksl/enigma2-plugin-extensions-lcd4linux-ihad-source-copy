@@ -47,6 +47,10 @@
 	<screen name="webradioFSdisplay" position="0,0" size="$w$,$h$">
 		<widget source="global.CurrentTime" render="PixmapLcd4linux" position="0,0" size="$w$,$h$" alphatest="blend" />
 	</screen>
+<!--webradio YANP-->
+	<screen name="YampLCDScreen" position="0,0" size="$w$,$h$">
+		<widget source="global.CurrentTime" render="PixmapLcd4linux" position="0,0" size="$w$,$h$" alphatest="blend" />
+	</screen>
 <!--L4L02-->
 
 <!--L4L03 Idle-->

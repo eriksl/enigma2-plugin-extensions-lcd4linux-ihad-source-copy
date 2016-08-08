@@ -26,8 +26,8 @@ L1 = []
 L2 = []
 L3 = []
 L4 = []
-M1 = ["LCD4linux.OSD","LCD4linux.Scr","LCD4linux.Bil","LCD4linux.Wet","LCD4linux.Pop","LCD4linux.Fri","LCD4linux.Fon","LCD4linux.Mai","LCD4linux.Cal","LCD4linux.RBo","LCD4linux.Www","LCD4linux.Web","LCD4linux.MJP","LCD4linux.xml"]
-M2 = [_("OSD"),_("Screen"),_("Picture"),_("Weather"),_("Popup-Text"),_("FritzCall"),_("Font"),_("Mail"),_("Calendar"),_("Remote Box"),_("WWW Converter"),_("WebIF"),_("MJPEG Stream"),_("Box-Skin-LCD")]
+M1 = ["LCD4linux.OSD","LCD4linux.Scr","LCD4linux.Bil","LCD4linux.Wet","LCD4linux.Net","LCD4linux.Pop","LCD4linux.Fri","LCD4linux.Fon","LCD4linux.Mai","LCD4linux.Cal","LCD4linux.RBo","LCD4linux.Www","LCD4linux.Web","LCD4linux.MJP","LCD4linux.xml","LCD4linux.Tun","LCD4linux.Key","LCD4linux.Son"]
+M2 = [_("OSD"),_("Screen"),_("Picture"),_("Weather"),_("Netatmo"),_("Popup-Text"),_("FritzCall"),_("Font"),_("Mail"),_("Calendar"),_("Remote Box"),_("WWW Converter"),_("WebIF"),_("MJPEG Stream"),_("Box-Skin-LCD"),_("Tuner"),_("Key"),_("Sonos")]
 
 Mode = "1"
 ModeOld = ""
@@ -146,11 +146,13 @@ class LCD4linuxConfigweb(resource.Resource):
 		global ExeMode
 		global StatusMode
 		IP = req.getClientIP()
+		L4logE("IP1:",IP)
 		if IP is None:
 			IP = req.client.host.split(":")[-1]
+			L4logE("IP2:",req.client.host)
 			if IP.find(".") == -1:
 				IP = None
-		if IP is None:	
+		if IP is None:
 			Block = False
 		else:
 			Block = True
@@ -273,7 +275,14 @@ class LCD4linuxConfigweb(resource.Resource):
 		elif command[0] == "status":
 			StatusMode = True
 		elif command[0] == "pop":
-			setPopText(req.args.get("PopText",[""])[0])
+			V = _l(req.args.get("PopText","")[0])
+			try:
+				import HTMLParser
+				parse=HTMLParser.HTMLParser()
+				V = parse.unescape(V)
+			except:
+				L4log("WebIF Error: Parse Text")
+			setPopText(V)
 			L4LElement.setRefresh()
 		elif command[0] == "popclear":
 			setPopText("")
@@ -305,6 +314,20 @@ class LCD4linuxConfigweb(resource.Resource):
 				L4LElement.setBrightness(exs[0])
 			elif len(exs) == 2:
 				L4LElement.setBrightness(exs[0],exs[1])
+		elif command[0] == "getbrightness" and ex is not None:
+			if int(ex[0])<1 or int(ex[0])>3:
+				return "0"
+			else:
+				return str(L4LElement.getBrightness(int(ex[0])))
+		elif command[0] == "getmjpeg" and ex is not None:
+			if int(ex[0])<1 or int(ex[0])>3:
+				return "0"
+			else:
+				return str(getMJPEGreader(ex[0]))
+		elif command[0] == "getexec" and ex is not None:
+			L4logE("getexec",ex[0])
+			exec("getexec = " + ex[0])
+			return str(getexec)
 		elif command[0] == "copyMP":
 			for a in req.args.keys():
 				if ".Standby" in a:
@@ -335,10 +358,12 @@ class LCD4linuxConfigweb(resource.Resource):
 					b = a.replace(".MP",".")
 					if (" "+b) in zip(*L2)[2]:
 						print a,b
+						exec("%s.value = %s.value" % (b,a))
 				elif ".Standby" in a:
 					b = a.replace(".Standby",".")
 					if (" "+b) in zip(*L2)[2]:
 						print a,b
+						exec("%s.value = %s.value" % (b,a))
 
 #####################
 # Konfig schreiben
@@ -414,7 +439,7 @@ class LCD4linuxConfigweb(resource.Resource):
 							xmlClear()
 						elif a.find(".MJPEG") >0:
 							MJPEG_start()
-							MJPEG_stop()
+							MJPEG_stop("")
 						elif a.find(".Font") >0:
 							setFONT(LCD4linux.Font.value)
 						if a.find("WetterCity") >0:
@@ -703,7 +728,7 @@ class LCD4linuxConfigweb(resource.Resource):
 		elif Mode == "5":
 			html += "<form method=\"POST\">\n"
 			html += "<fieldset style=\"width:auto\" name=\"Mode2\">\n"
-			html += "<textarea name=\"PopText\" style=\"height: 120px; width: 416px\">%s</textarea>" % PopText[1]
+			html += "<textarea name=\"PopText\" style=\"height: 120px; width: 416px\">%s</textarea>" % _l(PopText[1])
 			html += "<input type=\"hidden\" name=\"cmd\" value=\"pop\">\n"
 			html += "<input type=\"submit\" style=\"background-color: #FFCC00\" value=\"%s\">\n" % _l(_("set Settings"))
 			html += "</fieldset></form>\n"
