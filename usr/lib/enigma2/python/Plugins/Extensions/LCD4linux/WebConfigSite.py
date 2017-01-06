@@ -178,7 +178,8 @@ class LCD4linuxConfigweb(resource.Resource):
 			html += "<meta http-equiv=\"expires\" content=\"0\">\n"
 			html += "</head>"
 			html += "Config-WebIF Access Deny ( IP: %s )<br>\n" % IP
-			html += "(Global Setup > %s)\n" % _l(_("WebIF IP Allow"))
+			html += "Please check Setting in Global > %s\n" % _l(_("WebIF IP Allow"))
+			html += "Default is: 127. 192.168. 172. 10.\n"
 			html += "</body>\n"
 			html += "</html>\n"
 			return html

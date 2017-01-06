@@ -1,5 +1,5 @@
 Package: enigma2-plugin-extensions-lcd4linux
-Version: 4.7-r3
+Version: 4.7-r6
 Description: Web/DPF/Samsung LCD Ansteuerung
 Architecture: all
 Section: extra
