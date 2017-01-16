@@ -11665,7 +11665,11 @@ def LCD4linuxPIC(self,session):
 				c = LCD4linux.TunerColor.value
 				isON = False
 			count *= 2
-			w1,h1 = self.draw[draw].textsize("A", font=font)
+			w1, h1 = self.draw[draw].textsize(chr(ord('A') + x), font=font)
+			if x == 8: # tuner I
+				w1 *= 2.4
+			else:
+				w1 *= 1.4;
 			if isON:
 				self.draw[draw].rectangle((lx-1,ly,lx+w1,ly+h1), outline=c, fill="black")
 			if (ConfigActive == True and isON) or ConfigActive == False:
