@@ -2699,8 +2699,7 @@ def find_dev(Anzahl, idVendor, idProduct):
 				gefunden = True
 	elif USBok == True:
 		try:
-#			if len([d for d in usb.core.find(idVendor=idVendor, idProduct=idProduct, find_all=True)]) >= Anzahl: # pyusb
-			if len(usb.core.find(idVendor=idVendor, idProduct=idProduct, find_all=True)) >= Anzahl:
+			if len(list(usb.core.find(idVendor=idVendor, idProduct=idProduct, find_all=True))) >= Anzahl:
 				L4logE("usb.core find")
 				gefunden = True
 		except:

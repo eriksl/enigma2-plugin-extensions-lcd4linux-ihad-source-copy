@@ -85,7 +85,7 @@ def find_device(Anzahl,device):
 	try:
 		print "[LCD4linux] looking for frame",Anzahl, device['name'], device['idVendor'], device['idProduct']
 		if Anzahl == 2:
-			d = usb.core.find(idVendor=device['idVendor'], idProduct=device['idProduct'], find_all=True)
+			d = list(usb.core.find(idVendor=device['idVendor'], idProduct=device['idProduct'], find_all=True))
 			if isinstance(d,list):
 				if len(d) == 2:
 					d = d[1]
