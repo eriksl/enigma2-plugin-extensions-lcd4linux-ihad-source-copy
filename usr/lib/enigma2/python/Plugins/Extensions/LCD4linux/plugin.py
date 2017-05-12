@@ -14,7 +14,7 @@
 #  Advertise with this Plugin is not allowed.
 #  For other uses, permission from the author is necessary.
 #
-Version = "V4.7-r6"
+Version = "V4.8-r2"
 from __init__ import _
 from enigma import eConsoleAppContainer, eActionMap, iServiceInformation, iFrontendInformation, eDVBResourceManager, eDVBVolumecontrol
 from enigma import getDesktop, getEnigmaVersionString
@@ -296,7 +296,7 @@ NetatmoSelect = [("0", _("userdefined")), ("1", _("Module 1")), ("2", _("Module 
 #("125", _("Module 1+2+5")), ("1235", _("Module 1+2+3+5")), ("135", _("Module 1+3+5")), ("145", _("Module 1+4+5")), ("1345", _("Module 1+3+4+5")), ("15", _("Module 1+5")), ("25", _("Module 2+5")), ("25", _("Module 2+5")), ("235", _("Module 2+3+5")), ("245", _("Module 2+4+5")), ("2345", _("Module 2++3+4+5")), ("35", _("Module 3+5")), ("45", _("Module 4+5"))
 CO2Type = [("0", _("Bar")), ("09", _("Bar+Value")), ("1", _("Knob")), ("19", _("Knob+Value"))]
 ClockType = [("12", _("Time")), ("112", _("Date+Time")), ("1123", _("Date+Time+Weekday")), ("11", _("Date")), ("123", _("Time+Weekday")), ("13", _("Weekday")), ("4", _("Flaps Design Date")), ("41", _("Flaps Design Weekday")), ("51", _("Analog")), ("52", _("Analog+Date")), ("521", _("Analog+Date+Weekday")), ("521+", _("Analog+Date+Weekday 2"))]
-AlignType = [("0", _("left")), ("1", _("center")), ("2", _("right")), ("0100", _("1%")), ("0200", _("2%")), ("0300", _("3%")), ("0400", _("4%")), ("0500", _("5%")), ("1000", _("10%")), ("1500", _("15%")), ("2000", _("20%")), ("2500", _("25%")), ("3000", _("30%")), ("3500", _("35%")), ("4000", _("40%")), ("4500", _("45%")), ("5000", _("50%")), ("5500", _("55%")), ("6000", _("60%")), ("6500", _("65%")), ("7000", _("70%")), ("7500", _("75%")), ("8000", _("80%")), ("8500", _("85%")), ("9000", _("90%")), ("9500", _("95%"))]
+AlignType = [("0", _("left")), ("1", _("center")), ("2", _("right")), ("0200", _("2%")), ("0300", _("3%")), ("0500", _("5%")), ("1000", _("10%")), ("1500", _("15%")), ("2000", _("20%")), ("2500", _("25%")), ("3000", _("30%")), ("3500", _("35%")), ("4000", _("40%")), ("4500", _("45%")), ("5000", _("50%")), ("5500", _("55%")), ("6000", _("60%")), ("6500", _("65%")), ("7000", _("70%")), ("7500", _("75%")), ("8000", _("80%")), ("8500", _("85%")), ("9000", _("90%")), ("9500", _("95%")), ("9700", _("97%")), ("9800", _("98%"))]
 DescriptionType = [("10", _("Short")), ("12", _("Short (Extended)")),("01", _("Extended")), ("21", _("Extended (Short)")),("11", _("Short+Extended"))]
 CalType = [("9", _("no Calendar")),("0", _("Month")), ("0A", _("Month+Header")), ("1", _("Week")), ("1A", _("Week+Header"))]
 CalTypeE = [("0", _("no Dates")), ("D2", _("Dates compact 2 Lines")), ("D3", _("Dates compact 3 Lines")), ("C1", _("Dates 1 Line")), ("C3", _("Dates 3 Lines")), ("C5", _("Dates 5 Lines")), ("C9", _("Dates 9 Lines"))]
@@ -308,8 +308,7 @@ InfoTuner = [("0", _("no")), ("A", _("db")), ("B", _("%")), ("AB", _("db + %")),
 InfoCPU = [("0", _("no")), ("P", _("%")), ("L0", _("Load@1min")), ("L1", _("Load@5min")), ("PL0", _("% + Load@1min")), ("PL1", _("% + Load@5min"))]
 HddType = [("0", _("show run+sleep")), ("1", _("show run"))]
 MailType = [("A1", _("Always All")), ("A2", _("Always New")), ("B2", _("Only New"))]
-ProzentType = [("30", _("30%")), ("35", _("35%")), ("40", _("40%")), ("45", _("45%")), ("50", _("50%")), ("55", _("55%")), ("60", _("60%")), ("65", _("65%")), ("70", _("70%")), ("75", _("75%")), ("80", _("80%")), ("85", _("85%")),
-    ("90", _("90%")), ("95", _("95%")), ("96", _("96%")), ("97", _("97%")), ("98", _("98%")), ("99", _("99%")), ("100", _("100%"))]
+ProzentType = [("30", _("30%")), ("35", _("35%")), ("40", _("40%")), ("45", _("45%")), ("50", _("50%")), ("55", _("55%")), ("60", _("60%")), ("65", _("65%")), ("70", _("70%")), ("75", _("75%")), ("80", _("80%")), ("85", _("85%")), ("90", _("90%")), ("95", _("95%")), ("97", _("97%")), ("98", _("98%")), ("100", _("100%"))]
 WarningType = [("0", _("off")), ("2", _("2%")), ("3", _("3%")), ("5", _("5%")), ("10", _("10%")), ("15", _("15%")), ("20", _("20%")), ("25", _("25%"))]
 MailKonto = [("1", _("1")), ("2", _("1-2")), ("3", _("1-3")), ("4", _("1-4")), ("5", _("1-5"))]
 MailConnect = [("0", _("Pop3-SSL")), ("1", _("Pop3")), ("2", _("IMAP-SSL")), ("3", _("IMAP"))]
@@ -378,14 +377,18 @@ LCD4linux.LCDoff = ConfigClock(default = int(begin) ) # ((5 * 60 + 0) * 60)
 LCD4linux.LCDon = ConfigClock(default = int(begin) )
 LCD4linux.LCDWEoff = ConfigClock(default = int(begin) ) # ((5 * 60 + 0) * 60)
 LCD4linux.LCDWEon = ConfigClock(default = int(begin) )
+LCD4linux.LCDshutdown = ConfigYesNo(default = True)
 LCD4linux.Delay = ConfigSlider(default = 400,  increment = 50, limits = (50, 2000))
 LCD4linux.ElementThreads = ConfigSelectionNumber(1, 2, 1, default = 2)
 LCD4linux.DevForceRead = ConfigYesNo(default = True)
+LCD4linux.DevBackColor = ConfigSelection(choices = Farbe, default="yellow")
+LCD4linux.DevBarColor = ConfigSelection(choices = Farbe, default="lime")
+LCD4linux.DevFullColor = ConfigSelection(choices = Farbe, default="red")
 LCD4linux.DVBTCorrection = ConfigSelection(choices = [("0", _("no")), ("reverse", _("Plug Tuner")), ("usb", _("USB Tuner"))], default="0")
 LCD4linux.ServiceSearch = ConfigSelection(choices = [("0", _("Now/Next")), ("1", _("EPG"))], default="0")
 LCD4linux.ShowNoMsg = ConfigYesNo(default = True)
 LCD4linux.SavePicture = ConfigSelection(choices =  [("0", _("no"))] + LCDSelect, default="123")
-LCD4linux.NetworkCheckEnable = ConfigYesNo(default = True)
+LCD4linux.NETworkCheckEnable = ConfigYesNo(default = True)
 LCD4linux.MJPEGenable1 = ConfigYesNo(default = False)
 LCD4linux.MJPEGenable2 = ConfigYesNo(default = False)
 LCD4linux.MJPEGenable3 = ConfigYesNo(default = False)
@@ -433,6 +436,12 @@ LCD4linux.SonosON = ConfigYesNo(default = False)
 LCD4linux.SonosPingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (0, 1000))
 LCD4linux.SonosTimer = ConfigSelection(choices =  [("1", _("1")), ("2", _("2")), ("3", _("3")), ("5", _("5")), ("10", _("10")), ("20", _("20")), ("30", _("30")), ("60", _("60"))], default="10")
 LCD4linux.SonosCheckTimer = ConfigSelection(choices = [("2", _("10s")), ("3", _("15s")), ("4", _("20s")), ("6", _("30s")), ("12", _("1min")), ("24", _("2min"))], default="12")
+LCD4linux.YMCastIP = ConfigText(default="", fixed_size=False, visible_width=50)
+LCD4linux.YMCastServerIP = ConfigText(default="", fixed_size=False, visible_width=50)
+LCD4linux.YMCastPingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (0, 1000))
+LCD4linux.YMCastTimer = ConfigSelection(choices =  [("1", _("1")), ("2", _("2")), ("3", _("3")), ("5", _("5")), ("10", _("10")), ("20", _("20")), ("30", _("30")), ("60", _("60"))], default="10")
+LCD4linux.YMCastCheckTimer = ConfigSelection(choices = [("2", _("10s")), ("3", _("15s")), ("4", _("20s")), ("6", _("30s")), ("12", _("1min")), ("24", _("2min"))], default="12")
+LCD4linux.YMCastCover = ConfigSelection(choices = [("0", _("MusicCast")), ("1", _("Coversearch"))], default = "0")
 if PNGutilOK:
 	LCD4linux.LCDType1 = ConfigSelection(choices = LCDType, default="930")
 else:
@@ -457,6 +466,7 @@ LCD4linux.xmlLCDColor = ConfigSelection(choices = [("8", _("8bit - grayscale/col
 LCD4linux.xmlType01 = ConfigYesNo(default = False)
 LCD4linux.xmlType02 = ConfigYesNo(default = False)
 LCD4linux.xmlType03 = ConfigYesNo(default = False)
+LCD4linux.xmlOffset = ConfigSelectionNumber(0, 20, 1, default = 0)
 LCD4linux.SizeW = ConfigSlider(default = 800,  increment = 1, limits = (100, 2000))
 LCD4linux.SizeH = ConfigSlider(default = 600,  increment = 1, limits = (100, 1000))
 LCD4linux.SizeW2 = ConfigSlider(default = 800,  increment = 1, limits = (100, 2000))
@@ -579,6 +589,7 @@ LCD4linux.OSDshow = ConfigSelection(choices = [("TRM", _("TV+Radio+Media")), ("T
 LCD4linux.OSDTransparenz = ConfigSelection(choices = [("0", _("normal (full)")), ("1", _("trimmed (transparent)")), ("2", _("trimmed (black)"))], default = "1")
 LCD4linux.OSDfast = ConfigYesNo(default = False)
 LCD4linux.Popup = ConfigSelection(choices = ScreenSelect, default="0")
+LCD4linux.PopupKey = ConfigSelection(choices = [("0", _("MUTE or defined Keys")), ("1", _("any Key"))], default = "0")
 LCD4linux.PopupLCD = ConfigSelection(choices = LCDSelect, default="1")
 LCD4linux.PopupSize = ConfigSlider(default = 30,  increment = 1, limits = (10, 150))
 LCD4linux.PopupPos = ConfigSlider(default = 30,  increment = 2, limits = (0, 1024))
@@ -759,7 +770,7 @@ LCD4linux.ProgressPos = ConfigSlider(default = 120,  increment = 2, limits = (0,
 LCD4linux.ProgressColor = ConfigSelection(choices = Farbe, default="white")
 LCD4linux.ProgressColorText = ConfigSelection(choices = Farbe, default="white")
 LCD4linux.ProgressMinutes = ConfigYesNo(default = True)
-LCD4linux.ProgressBorder = ConfigSelection(choices = [("off", _("no Bar")), ("true", _("Frame")), ("false", _("no Frame")), ("line", _("Line"))], default="true")
+LCD4linux.ProgressBorder = ConfigSelection(choices = [("off", _("no Bar")), ("true", _("Frame")), ("true2", _("Frame x2")), ("false", _("no Frame")), ("line", _("Line"))], default="true")
 LCD4linux.ProgressShadow = ConfigYesNo(default = False)
 LCD4linux.ProgressShadow2 = ConfigSelection(choices = [("false", _("Normal")), ("true", _("Shadow Edges")), ("gradient", _("Gradient"))], default="false")
 LCD4linux.ProgressFont = ConfigSelection(choices = FontType, default="0")
@@ -1272,7 +1283,7 @@ LCD4linux.MPProgressAlign = ConfigSelection(choices = [("5", _("half left")), ("
 LCD4linux.MPProgressColor = ConfigSelection(choices = Farbe, default="white")
 LCD4linux.MPProgressColorText = ConfigSelection(choices = Farbe, default="white")
 LCD4linux.MPProgressMinutes = ConfigYesNo(default = True)
-LCD4linux.MPProgressBorder = ConfigSelection(choices = [("off", _("no Bar")), ("true", _("Frame")), ("false", _("no Frame")), ("line", _("Line"))], default="true")
+LCD4linux.MPProgressBorder = ConfigSelection(choices = [("off", _("no Bar")), ("true", _("Frame")), ("true2", _("Frame x2")), ("false", _("no Frame")), ("line", _("Line"))], default="true")
 LCD4linux.MPProgressShadow = ConfigYesNo(default = False)
 LCD4linux.MPProgressShadow2 = ConfigSelection(choices = [("false", _("Normal")), ("true", _("Shadow Edges")), ("gradient", _("Gradient"))], default="false")
 LCD4linux.MPProgressFont = ConfigSelection(choices = FontType, default="0")
@@ -2461,6 +2472,11 @@ def ICSdownloads():
 	global ICSlist
 	global ICSdownrun
 	global PICcal
+	def dateiter(start, resolution):
+		date = start
+		while True:
+			yield date
+			date += resolution
 	L4logE("ICSdownloads...",len(ICSlist))
 	if (len(ICSlist) == 0 and LCD4linux.CalPlanerFS.value == False) or ICSdownrun == True:
 		PICcal = None
@@ -2524,6 +2540,16 @@ def ICSdownloads():
 				if Icomp.name == "VEVENT":
 					L4logE(Icomp["dtstart"],Icomp.get('summary'))
 					rrule=str(Icomp.get("rrule",""))
+					if "UNTIL" in rrule or "INTERVAL" in rrule:
+						y={}
+						for b in rrule.split(";"):
+							y[b.split("=")[0]]=b.split("=")[1]
+						if y.get("UNTIL","") != "" and y.get("UNTIL","999999999") < "%4d%02d%02d" % (datetime.now().year,datetime.now().month,datetime.now().day):
+							L4logE("Until-Rule ignore",rrule)
+							continue
+						if int(y.get("INTERVAL","1")) > 1:
+							L4logE("Interval-Rule ignore",rrule)
+							continue
 					if "YEARLY" in rrule:
 						dt=str(Icomp.decoded("dtstart"))
 #						L4log(dt, date(datetime.now().year, int(dt[5:7]),int(dt[8:10])))
@@ -2574,6 +2600,9 @@ def getResolution(t,r):
 	if t[:1] == "5":
 		ttt = LCD4linux.xmlLCDType.value.split("x")
 		MAX_W,MAX_H = int(ttt[0]),int(ttt[1])
+		if int(LCD4linux.xmlOffset.value) != 0:
+			MAX_W-=(int(LCD4linux.xmlOffset.value)*2)
+			MAX_H-=(int(LCD4linux.xmlOffset.value)*2)
 	elif t[1:] == "1":
 		MAX_W,MAX_H = 320,240
 	elif t[1:] == "2":
@@ -2951,6 +2980,14 @@ def writeLCD1(s,im,quality,SAVE=True):
 				s.im[im].save(PICtmp+".png", "PNG" if LCD4linux.BilderTyp.value=="png" else "JPEG")
 				if os.path.isfile(PICtmp+".png"):
 					os.rename(PICtmp+".png",PIC+".png")
+			if int(LCD4linux.xmlOffset.value) != 0:
+				MAX_W,MAX_H = s.im[im].size
+				MAX_W+=(int(LCD4linux.xmlOffset.value)*2)
+				MAX_H+=(int(LCD4linux.xmlOffset.value)*2)
+				imt = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
+				imt.paste(s.im[im],(int(LCD4linux.xmlOffset.value),int(LCD4linux.xmlOffset.value)))
+				s.im[im] = imt
+				del imt
 			if s.im[im].size == (700,390):
 				s.im[im].convert("P", colors= 254).resize((700, 561)).save(xmlPICtmp, "PNG")
 			else:
@@ -3057,6 +3094,14 @@ def writeLCD2(s,im,quality,SAVE=True):
 				s.im[im].save(PIC2tmp+".png", "PNG" if LCD4linux.BilderTyp.value=="png" else "JPEG")
 				if os.path.isfile(PIC2tmp+".png"):
 					os.rename(PIC2tmp+".png",PIC2+".png")
+			if int(LCD4linux.xmlOffset.value) != 0:
+				MAX_W,MAX_H = s.im[im].size
+				MAX_W+=(int(LCD4linux.xmlOffset.value)*2)
+				MAX_H+=(int(LCD4linux.xmlOffset.value)*2)
+				imt = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
+				imt.paste(s.im[im],(int(LCD4linux.xmlOffset.value),int(LCD4linux.xmlOffset.value)))
+				s.im[im] = imt
+				del imt
 			if s.im[im].size == (700,390):
 				s.im[im].convert("P", colors= 254).resize((700, 561)).save(xmlPICtmp, "PNG")
 			else:
@@ -3163,6 +3208,14 @@ def writeLCD3(s,im,quality,SAVE=True):
 				s.im[im].save(PIC3tmp+".png", "PNG" if LCD4linux.BilderTyp.value=="png" else "JPEG")
 				if os.path.isfile(PIC3tmp+".png"):
 					os.rename(PIC3tmp+".png",PIC3+".png")
+			if int(LCD4linux.xmlOffset.value) != 0:
+				MAX_W,MAX_H = s.im[im].size
+				MAX_W+=(int(LCD4linux.xmlOffset.value)*2)
+				MAX_H+=(int(LCD4linux.xmlOffset.value)*2)
+				imt = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
+				imt.paste(s.im[im],(int(LCD4linux.xmlOffset.value),int(LCD4linux.xmlOffset.value)))
+				s.im[im] = imt
+				del imt
 			if s.im[im].size == (700,390):
 				s.im[im].convert("P", colors= 254).resize((700, 561)).save(xmlPICtmp, "PNG")
 			else:
@@ -3224,7 +3277,7 @@ def NextScreen(PRESS):
 	if SaveEventListChanged == True:
 		L4logE("Event Change Aktive")
 		return
-	if (Standby.inStandby or ConfigStandby) and isMediaPlayer != "sonos":
+	if (Standby.inStandby or ConfigStandby) and isMediaPlayer != "sonos" and isMediaPlayer != "ymc":
 		if ScreenActive[0] == "1":
 			ST = LCD4linux.StandbyScreenTime.value
 		elif ScreenActive[0] == "2":
@@ -3269,7 +3322,7 @@ def NextScreen(PRESS):
 	if ScreenTime >= int(ST) and int(ST) > 0 or PRESS == True:
 		ScreenTime=0
 		ScreenActive[0] = str(int(ScreenActive[0])+1)
-		if (Standby.inStandby or ConfigStandby) and isMediaPlayer != "sonos":
+		if (Standby.inStandby or ConfigStandby) and isMediaPlayer != "sonos" and isMediaPlayer != "ymc":
 			if int(ScreenActive[0]) > int(LCD4linux.StandbyScreenMax.value):
 				ScreenActive[0] = "1"
 		elif (isMediaPlayer != "" and isMediaPlayer != "radio"):
@@ -3300,7 +3353,7 @@ def getBilder():
 	BilderOrt = ["","",""]
 	Bilder = [[],[],[]]
 	SuchExt = ["*.png","*.PNG","*.jpg","*.JPG"]
-	if (Standby.inStandby or ConfigStandby) and isMediaPlayer != "sonos":
+	if (Standby.inStandby or ConfigStandby) and isMediaPlayer != "sonos" and isMediaPlayer != "ymc":
 		if str(LCD4linux.StandbyBild.value) != "0":
 			BilderOrt[0] = LCD4linux.StandbyBildFile.value
 		if str(LCD4linux.StandbyBild2.value) != "0":
@@ -3566,7 +3619,7 @@ def MJPEG_stop(force):
 			pass
 
 def getWWW():
-	if (str(LCD4linux.WWW1.value) != "0" and len(LCD4linux.WWW1url.value)>10) and (not Standby.inStandby or isMediaPlayer == "sonos"):
+	if (str(LCD4linux.WWW1.value) != "0" and len(LCD4linux.WWW1url.value)>10) and (not Standby.inStandby or isMediaPlayer == "sonos" or isMediaPlayer == "ymc"):
 		L4log("WWW Converter check on")
 		if LCD4linux.WwwApiUsage == "convertapi":
 			getHTMLwwwConvertapi(1,LCD4linux.WWW1url.value,LCD4linux.WWW1w.value,LCD4linux.WWW1h.value)
@@ -3610,27 +3663,16 @@ def getHTMLwww(fn,url):
 	L4log("downloading HTMLwww from",url)
 	downloadPage(url , filename).addCallback(boundFunction(HTMLwwwDownloadFinished, filename)).addErrback(HTMLwwwDownloadFailed)
 
-def SonosDownloadFailed(result):
-	L4log("Sonos download failed:",result)
-
-def SonosDownloadFinished(filename, result):
-	if os.path.isfile(filename):
-		L4log("Sonos download finished")
-	else:
-		L4log("Sonos download finished, no file found")
-
-def getSonosPic(fn,url):
-	filename=fn
-	L4log("downloading Sonos from",url)
-	downloadPage(url , filename).addCallback(boundFunction(SonosDownloadFinished, filename)).addErrback(SonosDownloadFailed)
-
 def Urlget(url, params, method):
 	params = urllib.urlencode(params)
 	if method=='POST':
 		f = urllib.urlopen(url, params)
 	else:
 		f = urllib.urlopen(url+'?'+params)
-	return (f.read(), f.code)
+	fr = f.read()
+	fc = f.code
+	f.close()
+	return (fr,fc)
 
 def getHTMLwwwCloudconvert(fn,www):
 	if len(LCD4linux.WwwApiKeyCloudconvert.value.split()) == 0:
@@ -3810,14 +3852,6 @@ class RunShell:
 		global ShellRunning
 		ShellRunning = True
 		L4log("Shell",cmd)
-#		self.container = eConsoleAppContainer()
-#		if DPKG:
-#			self.appClosed_conn = self.container.appClosed.connect(self.cmdFinished)
-#			self.dataAvail_conn = self.container.dataAvail.connect(self.dataAvail)
-#		else:
-#			self.container.appClosed.append(self.cmdFinished)
-#			self.container.dataAvail.append(self.dataAvail)
-#		self.container.execute(cmd)
 		os.system(cmd + " >/dev/null 2>&1")
 		ShellRunning = False
 
@@ -4184,6 +4218,7 @@ try:
 except:
 	SonosOK = False
 	L4log("Sonos not registered")
+from ymc import YMC
 
 class GrabOSD:
 	def __init__(self, cmd):
@@ -4191,11 +4226,6 @@ class GrabOSD:
 		GrabRunning = True
 		L4logE("Grab Run")
 
-#		self.container = eConsoleAppContainer()
-#		self.container.appClosed.append(self.cmdFinished)
-#		self.container.dataAvail.append(self.dataAvail)
-
-#		self.container.execute(cmd)
 		os.system(cmd + " >/dev/null 2>&1")
 		self.cmdFinished("")
 
@@ -4597,10 +4627,6 @@ class L4LWorker(Thread):
 						PopMail[i].append(["Mail Error","","",""])
 						from traceback import format_exc
 						L4log("Error:",format_exc() )
-#						try:
-#							open(CrashFile,"w").write(format_exc())
-#						except:
-#							pass
 						continue
 					try:
 						mailserver.quit()
@@ -4644,7 +4670,6 @@ class L4LWorker(Thread):
 								latest_email_id = int( id_list[-1] )
 								L4logE(typ, data)
 								for M in id_list:
-#								for M in range(1,int(latest_email_id)+1):
 									Date = ""
 									From = ""
 									Subj = ""
@@ -4669,10 +4694,6 @@ class L4LWorker(Thread):
 						PopMail[i].append(["Mail Error","","",""])
 						from traceback import format_exc
 						L4log("Error:",format_exc() )
-#						try:
-#							open(CrashFile,"w").write(format_exc())
-#						except:
-#							pass
 						continue
 					try:
 						mailserver.close()
@@ -5226,6 +5247,7 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 				self.list1.append(getConfigListEntry(_("- LCD 3 Refresh"), LCD4linux.LCDRefresh3))
 			if LCD4linux.LCDType1.value[0] == "5" or LCD4linux.LCDType2.value[0] == "5" or LCD4linux.LCDType3.value[0] == "5":
 				self.list1.append(getConfigListEntry(_("Box-Skin-LCD Dimension"), LCD4linux.xmlLCDType))
+				self.list1.append(getConfigListEntry(_("Box-Skin-LCD Offset"), LCD4linux.xmlOffset))
 				self.list1.append(getConfigListEntry(_("Box-Skin-LCD Color"), LCD4linux.xmlLCDColor))
 				self.list1.append(getConfigListEntry(_("Box-Skin-LCD Enable On-Mode"), LCD4linux.xmlType01))
 				self.list1.append(getConfigListEntry(_("Box-Skin-LCD Enable Media-Mode"), LCD4linux.xmlType02))
@@ -5240,6 +5262,7 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 			self.list1.append(getConfigListEntry(_("Popup Text"), LCD4linux.Popup))
 			if LCD4linux.Popup.value != "0":
 				self.list1.append(getConfigListEntry(_("- which LCD"), LCD4linux.PopupLCD))
+				self.list1.append(getConfigListEntry(_("- Clear Key"), LCD4linux.PopupKey))
 				self.list1.append(getConfigListEntry(_("- Font Size"), LCD4linux.PopupSize))
 				self.list1.append(getConfigListEntry(_("- Position"), LCD4linux.PopupPos))
 				self.list1.append(getConfigListEntry(_("- Alignment"), LCD4linux.PopupAlign))
@@ -5403,18 +5426,27 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 			self.list1.append(getConfigListEntry(_("Sonos Ping Timeout [ms]"), LCD4linux.SonosPingTimeout))
 			self.list1.append(getConfigListEntry(_("Sonos Play Check"), LCD4linux.SonosCheckTimer))
 			self.list1.append(getConfigListEntry(_("Sonos Refresh [s]"), LCD4linux.SonosTimer))
-#			self.list1.append(getConfigListEntry(_("Sonos ON"), LCD4linux.SonosON))
+			self.list1.append(getConfigListEntry(_("MusicCast IP"), LCD4linux.YMCastIP))
+			self.list1.append(getConfigListEntry(_("MusicCast Server IP [optional]"), LCD4linux.YMCastServerIP))
+			self.list1.append(getConfigListEntry(_("MusicCast Ping Timeout [ms]"), LCD4linux.YMCastPingTimeout))
+			self.list1.append(getConfigListEntry(_("MusicCast Play Check"), LCD4linux.YMCastCheckTimer))
+			self.list1.append(getConfigListEntry(_("MusicCast Refresh [s]"), LCD4linux.YMCastTimer))
+			self.list1.append(getConfigListEntry(_("MusicCast Cover"), LCD4linux.YMCastCover))
 			self.list1.append(getConfigListEntry(_("LCD Custom Width"), LCD4linux.SizeW))
 			self.list1.append(getConfigListEntry(_("LCD Custom Height"), LCD4linux.SizeH))
 			self.list1.append(getConfigListEntry(_("LCD Custom Width 2"), LCD4linux.SizeW2))
 			self.list1.append(getConfigListEntry(_("LCD Custom Height 2"), LCD4linux.SizeH2))
+			self.list1.append(getConfigListEntry(_("LCD Off when shutdown"), LCD4linux.LCDshutdown))
 			self.list1.append(getConfigListEntry(_("Timing ! calc all Times to Time/5*2 in Fastmode"), LCD4linux.FastMode))
 			self.list1.append(getConfigListEntry(_("Display Delay [ms]"), LCD4linux.Delay))
 			self.list1.append(getConfigListEntry(_("Threads per LCD"), LCD4linux.ElementThreads))
 			self.list1.append(getConfigListEntry(_("Show Crash Corner"), LCD4linux.Crash))
 			self.list1.append(getConfigListEntry(_("Show 'no ....' Messages"), LCD4linux.ShowNoMsg))
 			self.list1.append(getConfigListEntry(_("Storage-Devices: Force Read"), LCD4linux.DevForceRead))
-			self.list1.append(getConfigListEntry(_("Network Check active"), LCD4linux.NetworkCheckEnable))
+			self.list1.append(getConfigListEntry(_("Storage-Devices: Color Back"), LCD4linux.DevBackColor))
+			self.list1.append(getConfigListEntry(_("Storage-Devices: Color Bar"), LCD4linux.DevBarColor))
+			self.list1.append(getConfigListEntry(_("Storage-Devices: Color Full"), LCD4linux.DevFullColor))
+			self.list1.append(getConfigListEntry(_("Network Check active"), LCD4linux.NETworkCheckEnable))
 			self.list1.append(getConfigListEntry(_("Switch FrameBuffer [if possible]"), LCD4linux.SwitchToFB2))
 			self.list1.append(getConfigListEntry(_("Config Backup Path [ok]>"), LCD4linux.ConfigPath))
 			self.list1.append(getConfigListEntry(_("Config Restore All Settings"), LCD4linux.ConfigWriteAll))
@@ -7507,8 +7539,6 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 				L4log("removed old Skindata")
 				xmlWrite()
 			xmlClear()
-#		if LCD4linux.LCDType1.isChanged() or LCD4linux.LCDType2.isChanged():
-#			TFTCheck(False)
 		return
 
 	def getCurrentValue(self):
@@ -7658,6 +7688,7 @@ class UpdateStatus(Screen):
 		self.KeyTime = 0
 		self.AutoOFF = 0
 		self.SonosCheckTimer = 0
+		self.YMCastCheckTimer = 0
 		self.StandbyChanged = False
 		self.DataMinute = ""
 		self.l4l_info = {}
@@ -7731,9 +7762,16 @@ class UpdateStatus(Screen):
 		self.SonosRunning = False
 		self.SonosSoCo = None
 		self.SonosSoCoSave = ""
+		self.YMCastInfo = {}
+		self.YMCastRunning = False
+		self.YMCastSoCo = None
+		self.YMCastSoCoSave = ""
+		self.YMCastPlaytime = 0
+		self.YMCastoldTitle = ""
 		self.oldTitle = ""
 		self.CoverCount = 0
 		self.TunerCallBack=False
+		self.MSNsrc=0
 		self.WetterOK=False
 		self.TimeZone = "0"
 		self.Long = ""
@@ -7770,7 +7808,7 @@ class UpdateStatus(Screen):
 
 		self.NetworkConnectionAvailable = False
 		try:
-			if LCD4linux.NetworkCheckEnable.value == True:
+			if LCD4linux.NETworkCheckEnable.value == True:
 				if DPKG:
 					self.NetworkConnectionAvailable = iNetworkInfo.isConnected()
 				else:
@@ -7789,6 +7827,7 @@ class UpdateStatus(Screen):
 		self.CheckRefresh = eTimer()
 		self.Later6Timer = eTimer()
 		self.SonosTimer = eTimer()
+		self.YMCastTimer = eTimer()
 		if DPKG:
 			self.StatusTimer_conn = self.StatusTimer.timeout.connect(self.updateStatus)
 			self.ServiceTimer_conn = self.ServiceTimer.timeout.connect(self.ServiceChange)
@@ -7798,6 +7837,7 @@ class UpdateStatus(Screen):
 			self.CheckRefresh_conn = self.CheckRefresh.timeout.connect(self.CallCheckRefresh)
 			self.Later6Timer_conn = self.Later6Timer.timeout.connect(self.CallLater6)
 			self.SonosTimer_conn = self.SonosTimer.timeout.connect(self.getSonos)
+			self.YMCastTimer_conn = self.YMCastTimer.timeout.connect(self.getYMCast)
 		else:
 			self.StatusTimer.callback.append(self.updateStatus)
 			self.ServiceTimer.callback.append(self.ServiceChange)
@@ -7807,6 +7847,7 @@ class UpdateStatus(Screen):
 			self.CheckRefresh.callback.append(self.CallCheckRefresh)
 			self.Later6Timer.callback.append(self.CallLater6)
 			self.SonosTimer.callback.append(self.getSonos)
+			self.YMCastTimer.callback.append(self.getYMCast)
 
 		if GPjukeboxOK == True:
 			CjukeboxEventNotifier.append(self.BPPlayerEvent)
@@ -7828,7 +7869,7 @@ class UpdateStatus(Screen):
 #				iPlayableService.evUser: self.restartTimer
 			})
 
-		eActionMap.getInstance().bindAction('', -0x7FFFFFFF, self.rcKeyPressed)
+		self.InstanceKeyPressed=eActionMap.getInstance().bindAction('', -0x7FFFFFFF, self.rcKeyPressed)
 		self.recordtimer = session.nav.RecordTimer
 		self.LastTimerlistUpdate = 0
 		if str(LCD4linux.StandbyWetter.value) != "0" or str(LCD4linux.Wetter.value) != "0" or str(LCD4linux.MPWetter.value) != "0":
@@ -7884,10 +7925,7 @@ class UpdateStatus(Screen):
 
 	def onTunerCount(self):
 		global TunerCount
-		TunerCount = 0
-		for slot in range(nimmanager.getSlotCount()):
-			if nimmanager.getNimType(slot) is not None:
-				TunerCount += 1
+		TunerCount = nimmanager.getSlotCount()
 		res_mgr = eDVBResourceManager.getInstance()
 		if res_mgr:
 			self.TunerCallBack=True
@@ -7947,6 +7985,7 @@ class UpdateStatus(Screen):
 		self.CheckRefresh.start(500,True)
 
 	def getSonos(self):
+		global isMediaPlayer
 		if SonosOK == True and LCD4linux.SonosIP.value <> "":
 			tt = time()
 			if self.SonosSoCo == None or self.SonosSoCoSave != LCD4linux.SonosIP.value:
@@ -7969,6 +8008,8 @@ class UpdateStatus(Screen):
 					if r == None or r > int(LCD4linux.SonosPingTimeout.value)/1000.0:
 						self.SonosTrack = {}
 						self.SonosRunning = False
+						isMediaPlayer = ""
+						getBilder()
 						L4log("Sonos Ping Timeout",r)
 						return
 				cti = self.SonosSoCo.get_current_transport_info()
@@ -7982,6 +8023,8 @@ class UpdateStatus(Screen):
 					if self.SonosRunning == True:
 						self.SonosSoCo = None
 					self.SonosRunning = False
+					isMediaPlayer = ""
+					getBilder()
 					L4log("Sonos stopped")
 				else:
 					self.SonosTrack = self.SonosSoCo.get_current_track_info()
@@ -8000,6 +8043,57 @@ class UpdateStatus(Screen):
 				from traceback import format_exc
 				L4log("Error:",format_exc() )
 			L4log("Sonos RunTime: %.3f" % (time()-tt))
+
+	def getYMCast(self):
+		global isMediaPlayer
+		if LCD4linux.YMCastIP.value <> "":
+			tt = time()
+			if self.YMCastSoCo == None or self.YMCastSoCoSave != LCD4linux.YMCastIP.value:
+				self.YMCastSoCoSave = LCD4linux.YMCastIP.value
+				L4log("MusicCast Connect",LCD4linux.YMCastIP.value)
+				try:
+					self.YMCastSoCo = YMC(LCD4linux.YMCastIP.value)
+				except:
+					L4log("YMCast Connect Error")
+					self.YMCastSoCo = None
+			try:
+				if int(LCD4linux.YMCastPingTimeout.value) > 0:
+					r = ping.doOne(LCD4linux.YMCastIP.value,int(LCD4linux.YMCastPingTimeout.value)/1000.0)
+					if r == None or r > int(LCD4linux.YMCastPingTimeout.value)/1000.0:
+						r = ping.doOne(LCD4linux.YMCastIP.value,int(LCD4linux.YMCastPingTimeout.value)/1000.0)
+					if r == None or r > int(LCD4linux.YMCastPingTimeout.value)/1000.0:
+						self.YMCastInfo = {}
+						self.YMCastRunning = False
+						isMediaPlayer = ""
+						getBilder()
+						L4log("YMCast Ping Timeout",r)
+						return
+				self.YMCastInfo = self.YMCastSoCo.getPlayInfo()
+				if self.YMCastInfo == {}:
+					self.YMCastInfo = self.YMCastSoCo.getPlayInfo()
+				if self.YMCastInfo.get("playback","") != "play":
+					self.YMCastInfo = {}
+					if self.YMCastRunning == True:
+						self.YMCastSoCo = None
+					self.YMCastRunning = False
+					isMediaPlayer = ""
+					getBilder()
+					L4log("YMC stopped")
+				else:
+					self.Lvol = self.YMCastSoCo.getStatus().get("volume",0)
+					if self.YMCastRunning == False:
+						self.YMCastSoCo = None
+					self.YMCastRunning = True
+					L4log("YMC running",self.SonosTrack)
+					self.YMCastTimer.startLongTimer(int(LCD4linux.YMCastTimer.value))
+					self.restartTimer()
+			except:
+				self.YMCastInfo = {}
+				self.YMCastRunning = False
+				L4log("YMC Communikation Error")
+				from traceback import format_exc
+				L4log("Error:",format_exc() )
+			L4log("YMC RunTime: %.3f" % (time()-tt))
 
 	def getNetatmo(self):
 		if self.NetatmoOK == True:
@@ -8036,7 +8130,7 @@ class UpdateStatus(Screen):
 						for Mod in na.modules:
 							Battery = False
 							if Mod.module_type.startswith("NAModule"):
-								L4logE("Battery",Mod.battery_vp)
+								L4logE("Battery %s " % Mod.module_type,Mod.battery_vp)
 								# Outdoor , Wind , Rain , Indoor
 								Batterylist = {"NAModule1":4000,"NAModule2":4360,"NAModule3":4000,"NAModule4":4560}
 								if Mod.battery_vp > 0 and Mod.battery_vp <= Batterylist.get(Mod.module_type,4500):
@@ -8127,7 +8221,7 @@ class UpdateStatus(Screen):
 			FritzTime-=1
 		if self.AutoOFF != -1:
 			self.AutoOFF += 1
-			if Standby.inStandby and not self.SonosRunning:
+			if Standby.inStandby and not self.SonosRunning and not self.YMCastRunning:
 				if LCD4linux.StandbyAutoOFF.value != "0" and self.AutoOFF > int(LCD4linux.StandbyAutoOFF.value):
 					self.Refresh="1"
 					self.AutoOFF = -1
@@ -8198,7 +8292,7 @@ class UpdateStatus(Screen):
 					self.SaveStandbyBildfile = 0
 					self.Refresh="1"
 					self.restartTimer()
-		if (str(LCD4linux.ScreenTime.value) != "0" and (not Standby.inStandby or self.SonosRunning)) or (str(LCD4linux.StandbyScreenTime.value) != "0" and Standby.inStandby):
+		if (str(LCD4linux.ScreenTime.value) != "0" and (not Standby.inStandby or self.SonosRunning or self.YMCastRunning)) or (str(LCD4linux.StandbyScreenTime.value) != "0" and Standby.inStandby):
 			NextScreen(False)
 		elif SaveEventListChanged == False:
 			ScreenActive[0] = LCD4linux.ScreenActive.value
@@ -8236,6 +8330,11 @@ class UpdateStatus(Screen):
 				self.getSonos()
 			else:
 				self.SonosCheckTimer += 1
+		if self.YMCastCheckTimer >= int(LCD4linux.YMCastCheckTimer.value):
+			self.YMCastCheckTimer = 0
+			self.getYMCast()
+		else:
+			self.YMCastCheckTimer += 1
 		if isVideoPlaying !=0:
 			isVideoPlaying+=1
 #		print "----",LCD4linuxPIC.TimeZone, LCD4linuxPIC.Long, LCD4linuxPIC.Lat
@@ -8244,7 +8343,7 @@ class UpdateStatus(Screen):
 		if (int(strftime("%M")) % int(LCD4linux.RBoxRefresh.value) == 0 and int(strftime("%S")) > 45 and self.LastwwwBox != strftime("%M")) or self.StandbyChanged != Standby.inStandby:
 			self.LastwwwBox = strftime("%M")
 			if self.NetworkConnectionAvailable or self.NetworkConnectionAvailable == None:
-				if ((str(LCD4linux.RBox.value) != "0" or str(LCD4linux.MPRBox.value) != "0") and (not Standby.inStandby or self.SonosRunning)) or (str(LCD4linux.StandbyRBox.value) != "0" and Standby.inStandby):
+				if ((str(LCD4linux.RBox.value) != "0" or str(LCD4linux.MPRBox.value) != "0") and (not Standby.inStandby or self.SonosRunning or self.YMCastRunning)) or (str(LCD4linux.StandbyRBox.value) != "0" and Standby.inStandby):
 					if "T" in LCD4linux.RBoxShow.value+LCD4linux.MPRBoxShow.value+LCD4linux.StandbyRBoxShow.value:
 						CType = 1
 					else:
@@ -8253,7 +8352,7 @@ class UpdateStatus(Screen):
 		if (int(strftime("%M")) % int(LCD4linux.RBoxTimerRefresh.value) == 0 and int(strftime("%S")) > 45 and self.LastwwwBoxTimer != strftime("%M")) or self.StandbyChanged != Standby.inStandby:
 			self.LastwwwBoxTimer = strftime("%M")
 			if self.NetworkConnectionAvailable or self.NetworkConnectionAvailable == None:
-				if ((str(LCD4linux.RBoxTimer.value) != "0" or str(LCD4linux.MPRBoxTimer.value) != "0") and (not Standby.inStandby or self.SonosRunning)) or (str(LCD4linux.StandbyRBoxTimer.value) != "0" and Standby.inStandby):
+				if ((str(LCD4linux.RBoxTimer.value) != "0" or str(LCD4linux.MPRBoxTimer.value) != "0") and (not Standby.inStandby or self.SonosRunning or self.YMCastRunning)) or (str(LCD4linux.StandbyRBoxTimer.value) != "0" and Standby.inStandby):
 					self.downloadwwwBoxTimer([[LCD4linux.RBoxTimerName1.value,0]])
 		if strftime("%M")!=self.DataMinute or BilderTime == 1 or self.StandbyChanged != Standby.inStandby or ConfigMode or (ScreenActive[0] != SaveScreenActive) or isVideoPlaying > 2 or OSDon == 3 or FritzTime > 0 or self.LisRecording != self.session.nav.RecordTimer.isRecording():
 			L4log("Data-Build")
@@ -8261,11 +8360,11 @@ class UpdateStatus(Screen):
 			isVideoPlaying = 0
 			self.LgetGoogleCover = None
 			if strftime("%M")!=self.DataMinute:
-#				collected = gc.collect()
 				if int(strftime("%M")) % 4 == 0:
 					self.getNetatmo()
 				if int(strftime("%M")) % 5 == 0:
 					self.SonosSoCo = None
+					self.YMCastSoCo = None
 				if str(LCD4linux.StandbyWetter.value) != "0" or str(LCD4linux.Wetter.value) != "0" or str(LCD4linux.MPWetter.value) != "0":
 					if strftime("%M") in ("35","40","55") or wwwWetter[0] == "":
 						self.downloadWetter(LCD4linux.WetterCity.value,0)
@@ -8352,7 +8451,7 @@ class UpdateStatus(Screen):
 		self.ServiceChangeRunning = True
 		tt = time()
 		L4logE("Event Service Change")
-		if not self.SonosRunning:
+		if not self.SonosRunning and not self.YMCastRunning:
 			volctrl = eDVBVolumecontrol.getInstance()
 			if volctrl:
 				self.Lvol = volctrl.getVolume()
@@ -8361,7 +8460,7 @@ class UpdateStatus(Screen):
 		self.Ltimer_list = self.recordtimer.timer_list
 		self.LisRecording = self.session.nav.RecordTimer.isRecording()
 		sref = self.session.nav.getCurrentlyPlayingServiceReference()
-		if sref is not None and not self.SonosRunning:
+		if sref is not None and not self.SonosRunning and not self.YMCastRunning:
 			self.LsreftoString = sref.toString()
 			if self.LsreftoString is not None:
 				self.LsrefFile = self.LsreftoString[self.LsreftoString.rfind(":")+1:]
@@ -8469,9 +8568,6 @@ class UpdateStatus(Screen):
 							self.LsignalQuality = min(self.LsignalQuality*256,65536)
 					self.LsignalQualitydB = feinfo.getFrontendInfo(iFrontendInformation.signalQualitydB)
 					if self.LsignalQualitydB > 50000:
-#						status = feinfo.getFrontendStatus()
-#						if status is not None:
-#							self.LsignalQualitydB = status.get("tuner_signal_quality_db")
 						self.LsignalQualitydB = 0
 					self.LbitErrorRate = feinfo.getFrontendInfo(iFrontendInformation.bitErrorRate)
 					data = feinfo and feinfo.getAll(False)
@@ -8523,6 +8619,46 @@ class UpdateStatus(Screen):
 					self.SonosSoCo = None
 					L4log("Sonos Time Error",self.SonosTrack)
 				self.Lpath = "Sonos" 
+				self.LShortDescription = ""
+				self.LExtendedDescription = ""
+				self.LEventsDesc = None
+			elif self.YMCastRunning:
+				self.LsreftoString = "4097:0:0:0:0:0:0:0:0:0:MusicCast"
+				self.Lchannel_name = "MusicCast"
+				self.LsTagAlbum = Code_utf8(self.YMCastInfo.get("album",""))
+				self.LsTagArtist = Code_utf8(self.YMCastInfo.get("artist",""))
+				self.LsTagTitle = Code_utf8(self.YMCastInfo.get("track",""))
+				self.LgetName = self.LsTagTitle
+				if self.LsTagTitle == "":
+					self.LsTagTitle = self.Lchannel_name
+				elif self.LsTagArtist is not None and self.LsTagAlbum is not None and self.LsTagArtist !="" and self.LsTagAlbum != "":
+					self.LsTagTitle = self.LsTagArtist + " - " + self.LsTagTitle
+				pt = self.YMCastInfo.get("play_time",0)
+				tt = self.YMCastInfo.get("total_time",0)
+				if self.YMCastoldTitle != (self.LsTagTitle+self.LsTagArtist+self.YMCastInfo.get("albumart_url","")) and self.YMCastSoCo != None:
+					rmFile(GoogleCover)
+					self.YMCastPlaytime = pt
+					self.YMCastoldTitle = (self.LsTagTitle+self.LsTagArtist+self.YMCastInfo.get("albumart_url",""))
+
+					if (LCD4linux.YMCastCover.value == "0" or self.LsTagTitle == "MusicCast"):
+						if self.YMCastInfo.get("input","") == "mc_link" and LCD4linux.YMCastServerIP.value != "":
+							try:
+								YMCastServer = YMC(LCD4linux.YMCastServerIP.value)
+								url = "http://%s%s" % (YMCastServer.IP,YMCastServer.getPlayInfo().get("albumart_url",""))
+							except:
+								L4logE("YMC Server Error")
+								url=""
+						else:
+							url = "http://%s%s" % (self.YMCastSoCo.IP,self.YMCastInfo.get("albumart_url",""))
+						self.getSonosPic(GoogleCover,str(url))
+				if tt==0:
+					tm = 5 if pt-self.YMCastPlaytime < 5*60 else int(pt/60)+1
+					self.Llength = [1,(tm*60)*90000]
+					self.Lposition = [1,(pt-self.YMCastPlaytime)*90000]
+				else:
+					self.Llength = [1,tt*90000]
+					self.Lposition = [1,pt*90000]
+				self.Lpath = "MusicCast" 
 				self.LShortDescription = ""
 				self.LExtendedDescription = ""
 				self.LEventsDesc = None
@@ -8652,7 +8788,7 @@ class UpdateStatus(Screen):
 			self.Refresh="1"
 			self.restartTimer()
 		self.AutoOFF = 0
-		if key == 113: # MUTE
+		if (key == 113 and int(LCD4linux.PopupKey.value)==0) or int(LCD4linux.PopupKey.value)==1: # MUTE
 			if len(PopText[1])>2:
 				setPopText("")
 				self.Refresh="1"
@@ -8697,7 +8833,7 @@ class UpdateStatus(Screen):
 						L4logE("Restart at key and OSD=2")
 						self.Refresh="1"
 						self.restartTimer()
-				if key == self.ko or key == self.k:
+				if (key == self.ko or key == self.k) and int(LCD4linux.PopupKey.value)==0:
 					if len(PopText[1])>2:
 						setPopText("")
 						self.Refresh="1"
@@ -8890,6 +9026,7 @@ class UpdateStatus(Screen):
 			L4log("wwwBox Error %d" % element,str(error.getErrorMessage()))
 
 	def downloadWetter(self,ort,wetter):
+		src=["outlook","vista"][self.MSNsrc]
 		if self.NetworkConnectionAvailable or self.NetworkConnectionAvailable == None:
 			la = language.getLanguage().replace("_","-")
 			if la.upper() in ["NO-NO","CA-AD","SR-YU","EN-EN"]:
@@ -8897,10 +9034,10 @@ class UpdateStatus(Screen):
 			if LCD4linux.WetterApi.value == "MSN":
 				if ort.startswith("wc:"):
 					city=ort
-					self.feedurl = "http://weather.service.msn.com/data.aspx?src=outlook&weadegreetype=C&culture=%s&wealocations=%s" % (la,city) 
+					self.feedurl = "http://weather.service.msn.com/data.aspx?src=%s&weadegreetype=C&culture=%s&wealocations=%s" % (self.MSNsrc,la,city) 
 				else:
 					city=quote(ort)
-					self.feedurl = "http://weather.service.msn.com/data.aspx?src=outlook&weadegreetype=C&culture=%s&weasearchstr=%s" % (la,city) 
+					self.feedurl = "http://weather.service.msn.com/data.aspx?src=%s&weadegreetype=C&culture=%s&weasearchstr=%s" % (self.MSNsrc,la,city) 
 				getPage(self.feedurl).addCallback(boundFunction(self.downloadListCallback,wetter)).addErrback(self.downloadListError)
 			else:
 				apkey = ""
@@ -8996,9 +9133,11 @@ class UpdateStatus(Screen):
 
 			PICwetter[ConfigWWW]=None
 		else:
+			self.MSNsrc^=1
 			wwwWetter[ConfigWWW] = ""
 			self.WetterOK=False
-			L4log("Wetter%sdownload Error" % ConfigWWW)
+			L4log("Wetter%sdownload Error" % ConfigWWW,self.MSNsrc)
+			L4logE("Wetter Error Page:",page)
 			if page.find("skycode=\"44\"") > 0:
 				L4log("Wetterdownload unavailable Current Data")
 
@@ -9160,6 +9299,8 @@ class UpdateStatus(Screen):
 		self.CoverIm = None
 		self.CoverName = ["-","-"]
 		self.CoverCount += 1
+		self.Refresh="1"
+		self.restartTimer()
 		L4log("cover download failed:",result)
 
 	def coverDownloadFinished(self,filename, result):
@@ -9184,7 +9325,6 @@ class UpdateStatus(Screen):
 				else:
 					hq = "movie"
 				try:
-#					url = "https://itunes.apple.com/search?term=%s&limit=2&media=%s" % (quote_plus(artist),hq)
 					url = "https://itunes.apple.com/search?term=%s&limit=2&media=%s" % (quote(Code_utf8(aUmlaute(artist)).encode("latin","ignore")),hq)
 					url = url.replace("%26","&")
 					L4log("Cover Search",url)
@@ -9275,6 +9415,21 @@ class UpdateStatus(Screen):
 		else:
 			self.LgetGoogleCover = None
 			self.CoverError = error
+
+	def SonosDownloadFailed(self,result):
+		L4log("Sonos/YMC download failed:",result)
+
+	def SonosDownloadFinished(self,filename, result):
+		if os.path.isfile(filename):
+			self.restartTimer()
+			L4log("Sonos/YMC download finished")
+		else:
+			L4log("Sonos/YMC download finished, no file found")
+
+	def getSonosPic(self,fn,url):
+		filename=fn
+		L4log("downloading Sonos/YMC from",url)
+		downloadPage(url , filename).addCallback(boundFunction(self.SonosDownloadFinished, filename)).addErrback(self.SonosDownloadFailed)
 
 def LCD4linuxPICThread(self,session):
 	global ThreadRunning
@@ -9683,7 +9838,9 @@ def LCD4linuxPIC(self,session):
 				self.oldTitle = self.LsTagTitle
 				url = self.SonosTrack.get("album_art","")
 				if url <> "":
-					getSonosPic(GoogleCover,str(url))
+					self.getSonosPic(GoogleCover,str(url))
+			cover = GoogleCover
+		elif self.YMCastRunning and self.YMCastInfo.get("albumart_url","") != "" and (LCD4linux.YMCastCover.value == "0" or self.LsTagTitle == "MusicCast"):
 			cover = GoogleCover
 		elif self.LsreftoString is not None and self.LgetName is not None:
 			Title = self.LgetName
@@ -9718,8 +9875,6 @@ def LCD4linuxPIC(self,session):
 							MP3title = audio.get('title', [''])[0]
 							MP3artist = audio.get('artist', [''])[0]
 							MP3album = audio.get('album', [''])[0]
-#							print audio.keys()
-#							print audio.values()
 					if sreffile.lower().endswith(".flac"):
 						try:
 							audio = FLAC(sreffile)
@@ -9740,11 +9895,11 @@ def LCD4linuxPIC(self,session):
 						if len(tmp)>0:
 							cover = tmp[0]
 						else:
-							tmp = glob.glob(os.path.join(srefdir,"[Cc]over.[jp][pn]g"))
+							tmp = glob.glob(os.path.join(srefdir,"[Cc]over.[jp][pn]g")) + glob.glob(os.path.join(srefdir,"[Ff]older.[jp][pn]g"))
 							if len(tmp)>0:
 								cover = tmp[0]
 							else:
-								tmp = glob.glob(os.path.join(srefdir,"[Ff]older.[jp][pn]g"))
+								tmp = glob.glob(os.path.join(os.path.dirname(srefdir),"[Cc]over.[jp][pn]g")) + glob.glob(os.path.join(os.path.dirname(srefdir),"[Ff]older.[jp][pn]g"))
 								if len(tmp)>0:
 									cover = tmp[0]
 								else:
@@ -9753,11 +9908,11 @@ def LCD4linuxPIC(self,session):
 										cover = tmp[0]
 			elif cover == "" and os.path.isdir(srefdir):
 				try:
-					tmp = glob.glob(os.path.join(srefdir,Title+".[jp][pn]g")) + glob.glob(os.path.join(srefdir,"cover",Title+".[jp][pn]g")) + glob.glob(os.path.join(srefdir,sreffile2+".[jp][pn]g")) + glob.glob(os.path.join(srefdir,"[Cc]over.[jp][pn]g"))
+					tmp = glob.glob(os.path.join(srefdir,Title+".[jp][pn]g")) + glob.glob(os.path.join(srefdir,"cover",Title+".[jp][pn]g")) + glob.glob(os.path.join(srefdir,sreffile2+".[jp][pn]g")) + glob.glob(os.path.join(srefdir,"[Cc]over.[jp][pn]g")) + glob.glob(os.path.join(srefdir,"[Ff]older.[jp][pn]g"))
 					if len(tmp)>0:
 						cover = tmp[0]
 					else:
-						tmp = glob.glob(os.path.join(BildFile[0],Title+".[jp][pn]g")) + glob.glob(os.path.join(BildFile[1],Title+".[jp][pn]g"))
+						tmp = glob.glob(os.path.join(BildFile[0],Title+".[jp][pn]g")) + glob.glob(os.path.join(BildFile[1],Title+".[jp][pn]g")) + glob.glob(os.path.join(os.path.dirname(srefdir),"[Cc]over.[jp][pn]g")) + glob.glob(os.path.join(os.path.dirname(srefdir),"[Ff]older.[jp][pn]g"))
 						if len(tmp)>0:
 							cover = tmp[0]
 						else:
@@ -9839,7 +9994,11 @@ def LCD4linuxPIC(self,session):
 				if WebRadioFSok == True and os.path.isfile(self.l4l_info.get("Logo","")):
 					cover = self.l4l_info.get("Logo","")
 			if self.LsTagTitle is not None:
-				Title = self.LsTagTitle
+				if self.LsTagArtist is not None and self.LsTagAlbum is not None and self.LsTagArtist !="" and self.LsTagAlbum != "":
+					Title = self.LsTagArtist + " "
+				else:
+					Title = ""
+				Title += self.LsTagTitle
 			Video = Title.endswith(".mpg") or Title.endswith(".vob") or Title.endswith(".avi") or Title.endswith(".divx") or Title.endswith(".mv4") or Title.endswith(".mkv") or Title.endswith(".mp4") or Title.endswith(".ts")
 			isVid = sreffile.endswith(".mpg") or sreffile.endswith(".vob") or sreffile.endswith(".avi") or sreffile.endswith(".divx") or sreffile.endswith(".mv4") or sreffile.endswith(".mkv") or sreffile.endswith(".mp4") or sreffile.endswith(".ts")
 			if Title == "" or Video == True:
@@ -10736,7 +10895,7 @@ def LCD4linuxPIC(self,session):
 		else:
 			POSX = getSplit(False,ConfigAlign,MAX_W,ConfigSize)
 			font = ImageFont.truetype(FONT, 15, encoding='unic')
-			ShadowText(draw,POSX,ConfigPos,Code_utf8(_("Picture not available")),font,"red",True)
+			ShadowText(draw,POSX,ConfigPos,Code_utf8(_("Picture not available")+ " " + os.path.basename(ConfigFile)),font,"red",True)
 
 # Grab TV
 	def doGrabTV(x,y,lcd,vidosd):
@@ -11182,18 +11341,11 @@ def LCD4linuxPIC(self,session):
 								ShadowText(draw,ProgressBar-MinusProgress+15+POSX, ConfigPos+1-Minus-int((h-ConfigSize)/2),remaining,font,ConfigColorText,ConfigShadow)
 							elif ConfigType[0] in ["D"]:
 								dur = int(position[1]/90000)
-#								if dur > 3600:
-#									remaining1 = "%02d:%02d:%02d%s" % (dur/3600,dur%3600/60,dur%3600%60,Minutes)
-#								else:
 								remaining1 = "%02d:%02d%s" % (dur/60,dur%60,Minutes)
 								dur = int((length[1])/90000)
 								dur1 = int((length[1] - position[1])/90000)
-#								if dur > 3600:
 								durtime = datetime.now()+timedelta(seconds=dur1)
 								remaining = "%02d:%02d / %02d:%02d" % (dur/3600,dur%3600/60,durtime.hour,durtime.minute)
-#								else:
-#									durtime = datetime.now()+timedelta(minutes=dur1)
-#									remaining = "%02d:%02d / %02d:%02d" % (dur/60,dur%60,durtime.hour,durtime.minute)
 								w,h = self.draw[draw].textsize(remaining, font=font)
 								Minus = int(h/1.5)+2
 								MinusProgress = (w+10)
@@ -11303,8 +11455,10 @@ def LCD4linuxPIC(self,session):
 #					print event_begin, event_end, event.getDuration(), event.getPlayPosition()
 			if isData == True and ConfigBorder is not "off":
 				event_run=min(max(event_run,0),ProgressBar)
-				if ConfigBorder == "true":
+				if ConfigBorder[:4] == "true":
 					self.draw[draw].rectangle((POSX+9,ConfigPos,POSX+ProgressBar+11,ConfigPos+ConfigSize),outline=ConfigColor)
+					if ConfigBorder == "true2":
+						self.draw[draw].rectangle((POSX+10,ConfigPos+1,POSX+ProgressBar+10,ConfigPos+ConfigSize-1),outline=ConfigColor)
 				elif ConfigBorder == "line":
 					self.draw[draw].rectangle((POSX+10,ConfigPos+int(ConfigSize/2)-1,POSX+ProgressBar+10,ConfigPos+int(ConfigSize/2)+1),outline=ConfigColor,fill=ConfigColor)
 				self.draw[draw].rectangle((POSX+10,ConfigPos,POSX+event_run+10,ConfigPos+ConfigSize),fill=ConfigColor)
@@ -11665,11 +11819,7 @@ def LCD4linuxPIC(self,session):
 				c = LCD4linux.TunerColor.value
 				isON = False
 			count *= 2
-			w1, h1 = self.draw[draw].textsize(chr(ord('A') + x), font=font)
-			if x == 8: # tuner I
-				w1 *= 2.4
-			else:
-				w1 *= 1.4;
+			w1,h1 = self.draw[draw].textsize("A", font=font)
 			if isON:
 				self.draw[draw].rectangle((lx-1,ly,lx+w1,ly+h1), outline=c, fill="black")
 			if (ConfigActive == True and isON) or ConfigActive == False:
@@ -11886,7 +12036,6 @@ def LCD4linuxPIC(self,session):
 		for wwwB in self.wwwBox:
 			if len(wwwB)>1 and (len(wwwB[1])>1 or len(wwwB[2])>1):
 				rr="_".join(wwwB[1].split(":")[:10])
-#				if len(rr)>0:
 				POSX = getSplit(ConfigSplit,ConfigAlign,MAX_W,int(MAX_W/2))
 				CS=int(ConfigSize*3)
 				x=0
@@ -11998,12 +12147,12 @@ def LCD4linuxPIC(self,session):
 						Einh = "T"
 					ShadowText(draw,lx+20,ly,"%.1f" % Fe,font,ConfigColor,ConfigShadow)
 					ShadowText(draw,lx+20,ly+h,"%sByte" % Einh,font,ConfigColor,ConfigShadow)
-					self.draw[draw].rectangle((lx+8,ly,lx+18,ly+(2*h)), outline="lime", fill="red" if (Fproz<int(ConfigWarning) and l[:3] != "RAM") else "lime")
+					self.draw[draw].rectangle((lx+8,ly,lx+18,ly+(2*h)), outline=LCD4linux.DevBarColor.value, fill=LCD4linux.DevFullColor.value if (Fproz<int(ConfigWarning) and l[:3] != "RAM") else LCD4linux.DevBarColor.value)
 					if l[:3] == "RAM":
-						self.draw[draw].rectangle((lx+8,ly,lx+18,ly+B1pixel), outline="yellow", fill="yellow")
-						self.draw[draw].rectangle((lx+8,ly+B1pixel,lx+14,ly+B1pixel+B2pixel), outline="yellow", fill="yellow")
+						self.draw[draw].rectangle((lx+8,ly,lx+18,ly+B1pixel), outline=LCD4linux.DevBackColor.value, fill=LCD4linux.DevBackColor.value)
+						self.draw[draw].rectangle((lx+8,ly+B1pixel,lx+14,ly+B1pixel+B2pixel), outline=LCD4linux.DevBackColor.value, fill=LCD4linux.DevBackColor.value)
 					else:
-						self.draw[draw].rectangle((lx+8,ly,lx+18,ly+Fpixel), outline="yellow", fill="yellow")
+						self.draw[draw].rectangle((lx+8,ly,lx+18,ly+Fpixel), outline=LCD4linux.DevBackColor.value, fill=LCD4linux.DevBackColor.value)
 					if l[:3] == "RAM":
 						Bpixel = ((2*h)*Bproz/100)
 					if ConfigType == "0":
@@ -13295,6 +13444,9 @@ def LCD4linuxPIC(self,session):
 			if self.SonosRunning:
 				L4log("detected Sonos")
 				isMediaPlayer = "sonos"
+			elif self.YMCastRunning:
+				L4log("detected YMC")
+				isMediaPlayer = "ymc"
 			elif sref.startswith("1:0:2") is True:
 				L4log("detected Radio")
 				isMediaPlayer = "radio"
@@ -13322,7 +13474,7 @@ def LCD4linuxPIC(self,session):
 	L4LElist.setResolution(1,MAX_W,MAX_H)
 	pil_open = ""
 	col_back = "black"
-	if (Standby.inStandby or ConfigStandby) and not self.SonosRunning:
+	if (Standby.inStandby or ConfigStandby) and not self.SonosRunning and not self.YMCastRunning:
 		pil_open = LCD4linux.StandbyLCDBild1.value
 		col_back = LCD4linux.StandbyLCDColor1.value
 		if ScreenActive[0] in LCD4linux.StandbyBackground1.value and "1" in LCD4linux.StandbyBackground1LCD.value:
@@ -13379,7 +13531,7 @@ def LCD4linuxPIC(self,session):
 		L4LElist.setResolution(2,MAX_W,MAX_H)
 		pil_open = ""
 		col_back = "black"
-		if (Standby.inStandby or ConfigStandby) and not self.SonosRunning:
+		if (Standby.inStandby or ConfigStandby) and not self.SonosRunning and not self.YMCastRunning:
 			pil_open = LCD4linux.StandbyLCDBild2.value
 			col_back = LCD4linux.StandbyLCDColor2.value
 			if ScreenActive[0] in LCD4linux.StandbyBackground1.value and "2" in LCD4linux.StandbyBackground1LCD.value:
@@ -13438,7 +13590,7 @@ def LCD4linuxPIC(self,session):
 		L4LElist.setResolution(3,MAX_W,MAX_H)
 		pil_open = ""
 		col_back = "black"
-		if (Standby.inStandby or ConfigStandby) and not self.SonosRunning:
+		if (Standby.inStandby or ConfigStandby) and not self.SonosRunning and not self.YMCastRunning:
 			pil_open = LCD4linux.StandbyLCDBild3.value
 			col_back = LCD4linux.StandbyLCDColor3.value
 			if ScreenActive[0] in LCD4linux.StandbyBackground1.value and "3" in LCD4linux.StandbyBackground1LCD.value:
@@ -13497,7 +13649,7 @@ def LCD4linuxPIC(self,session):
 ####
 #### Standby Modus
 ####
-	if (Standby.inStandby or ConfigStandby) and not self.SonosRunning:
+	if (Standby.inStandby or ConfigStandby) and not self.SonosRunning and not self.YMCastRunning:
 		if str(LCD4linux.Standby.value) == "1":
 			if LCD4linux.LCDType1.value[0] == "4" or LCD4linux.LCDType2.value[0] == "4" or LCD4linux.LCDType3.value[0] == "4":
 				if "C" in LCD4linux.LCDTFT.value:
@@ -14189,11 +14341,12 @@ def autostart(reason, **kwargs):
 			except:
 				L4log("Error save Fritzlist")
 		TFTCheck(False,SetMode="DREAM")
-		try:
-			Dunkel=writeHelligkeit([0,0,0],[0,0,0],True)
-		except:
-			L4log("Helligkeit-Error -> Fallback")
-			Dunkel=writeHelligkeit([0,0,0],[0,0,0],False)
+		if LCD4linux.LCDshutdown.value == True:
+			try:
+				Dunkel=writeHelligkeit([0,0,0],[0,0,0],True)
+			except:
+				L4log("Helligkeit-Error -> Fallback")
+				Dunkel=writeHelligkeit([0,0,0],[0,0,0],False)
 		if SamsungDevice is not None and LCD4linux.LCDType1.value[0] == "2":
 			try:
 				MAX_W,MAX_H = getResolution(LCD4linux.LCDType1.value,LCD4linux.LCDRotate1.value)
@@ -14234,17 +14387,17 @@ def autostart(reason, **kwargs):
 def Plugins(**kwargs):
 	list = [
 	PluginDescriptor(name="LCD4linux", 
-	description="LCD4linux", 
+	description=_("LCD4linux"), 
 	where = [PluginDescriptor.WHERE_SESSIONSTART, 
 	PluginDescriptor.WHERE_AUTOSTART], 
 	fnc = autostart)]
 	list.append(PluginDescriptor(name="LCD4linux", 
-	description="LCD4linux", 
+	description=_("LCD4linux"), 
 	where = PluginDescriptor.WHERE_PLUGINMENU,
 	icon = "plugin.png",
 	fnc = main))
 	list.append(PluginDescriptor(name=_("LCD4linux Screen Switch"), 
-	description="LCD4linux Screen Switch", 
+	description=_("LCD4linux Screen Switch"), 
 	where = PluginDescriptor.WHERE_EXTENSIONSMENU,
 	icon = "plugin.png",
 	fnc = screenswitch))

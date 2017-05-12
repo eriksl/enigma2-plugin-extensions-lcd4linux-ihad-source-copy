@@ -26,8 +26,8 @@ L1 = []
 L2 = []
 L3 = []
 L4 = []
-M1 = ["LCD4linux.OSD","LCD4linux.Scr","LCD4linux.Bil","LCD4linux.Wet","LCD4linux.Net","LCD4linux.Pop","LCD4linux.Fri","LCD4linux.Fon","LCD4linux.Mai","LCD4linux.Cal","LCD4linux.RBo","LCD4linux.Www","LCD4linux.Web","LCD4linux.MJP","LCD4linux.xml","LCD4linux.Tun","LCD4linux.Key","LCD4linux.Son"]
-M2 = [_("OSD"),_("Screen"),_("Picture"),_("Weather"),_("Netatmo"),_("Popup-Text"),_("FritzCall"),_("Font"),_("Mail"),_("Calendar"),_("Remote Box"),_("WWW Converter"),_("WebIF"),_("MJPEG Stream"),_("Box-Skin-LCD"),_("Tuner"),_("Key"),_("Sonos")]
+M1 = ["LCD4linux.OSD","LCD4linux.Scr","LCD4linux.Bil","LCD4linux.Wet","LCD4linux.Net","LCD4linux.Pop","LCD4linux.Fri","LCD4linux.Fon","LCD4linux.Mai","LCD4linux.Cal","LCD4linux.RBo","LCD4linux.Www","LCD4linux.Web","LCD4linux.MJP","LCD4linux.xml","LCD4linux.Tun","LCD4linux.Key","LCD4linux.Son","LCD4linux.YMC"]
+M2 = [_("OSD"),_("Screen"),_("Picture"),_("Weather"),_("Netatmo"),_("Popup-Text"),_("FritzCall"),_("Font"),_("Mail"),_("Calendar"),_("Remote Box"),_("WWW Converter"),_("WebIF"),_("MJPEG Stream"),_("Box-Skin-LCD"),_("Tuner"),_("Key"),_("Sonos"),_("MusicCast")]
 
 Mode = "1"
 ModeOld = ""
