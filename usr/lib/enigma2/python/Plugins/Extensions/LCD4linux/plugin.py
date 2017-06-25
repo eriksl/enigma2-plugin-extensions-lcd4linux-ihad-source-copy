@@ -4217,7 +4217,6 @@ try:
 except:
 	SonosOK = False
 	L4log("Sonos not registered")
-from ymc import YMC
 
 class GrabOSD:
 	def __init__(self, cmd):
