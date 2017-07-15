@@ -14,7 +14,7 @@
 #  Advertise with this Plugin is not allowed.
 #  For other uses, permission from the author is necessary.
 #
-Version = "V4.8-r2"
+Version = "V4.9-r0"
 from __init__ import _
 from enigma import eConsoleAppContainer, eActionMap, iServiceInformation, iFrontendInformation, eDVBResourceManager, eDVBVolumecontrol
 from enigma import getDesktop, getEnigmaVersionString
@@ -44,6 +44,13 @@ from PIL import ImageEnhance
 import colorsys
 import email
 from email.header import decode_header
+import ssl
+try:
+	_create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+	pass
+else:
+	ssl._create_default_https_context = _create_unverified_https_context
 import urlparse
 import urllib
 try:
@@ -117,7 +124,17 @@ try:
 except:
 	DPKG = False
 	from Components.Network import iNetwork
-
+try:
+	from enigma import iDVBFrontend
+	feCable = iDVBFrontend.feCable
+	feSatellite = iDVBFrontend.feSatellite
+	feTerrestrial = iDVBFrontend.feTerrestrial
+	feok = True
+except:
+	feCable = 2
+	feSatellite = 1
+	feTerrestrial = 4
+	feok = False
 try:
 	if os.path.exists("/dev/lcd2"):
 		from fcntl import ioctl
@@ -241,6 +258,7 @@ Brief3 = Queue.Queue()
 MJPEG = ["0123",Queue.Queue(),Queue.Queue(),Queue.Queue()]
 MJPEGserver = [None,None,None,None]
 MJPEGreader = [0,0,0,0]
+MJPEGrun = [0,0,0,0]
 CPUtotal = 0
 CPUidle = 0
 L4LSun = (7,0)
@@ -1039,6 +1057,7 @@ LCD4linux.NetAtmo2Color3 = ConfigSelection(choices = OffFarbe, default="0")
 LCD4linux.NetAtmo2Color4 = ConfigSelection(choices = OffFarbe, default="0")
 LCD4linux.NetAtmo2Color5 = ConfigSelection(choices = OffFarbe, default="0")
 LCD4linux.NetAtmo2Color6 = ConfigSelection(choices = OffFarbe, default="0")
+LCD4linux.NetAtmo2Color7 = ConfigSelection(choices = OffFarbe, default="0")
 LCD4linux.NetAtmo2Shadow = ConfigYesNo(default = False)
 LCD4linux.NetAtmo2Font = ConfigSelection(choices = FontType, default="0")
 LCD4linux.NetAtmoCO2 = ConfigSelection(choices = ScreenSelect, default="0")
@@ -1531,6 +1550,7 @@ LCD4linux.MPNetAtmo2Color3 = ConfigSelection(choices = OffFarbe, default="0")
 LCD4linux.MPNetAtmo2Color4 = ConfigSelection(choices = OffFarbe, default="0")
 LCD4linux.MPNetAtmo2Color5 = ConfigSelection(choices = OffFarbe, default="0")
 LCD4linux.MPNetAtmo2Color6 = ConfigSelection(choices = OffFarbe, default="0")
+LCD4linux.MPNetAtmo2Color7 = ConfigSelection(choices = OffFarbe, default="0")
 LCD4linux.MPNetAtmo2Shadow = ConfigYesNo(default = False)
 LCD4linux.MPNetAtmo2Font = ConfigSelection(choices = FontType, default="0")
 LCD4linux.MPNetAtmoCO2 = ConfigSelection(choices = ScreenSelect, default="0")
@@ -1977,6 +1997,7 @@ LCD4linux.StandbyNetAtmo2Color3 = ConfigSelection(choices = OffFarbe, default="0
 LCD4linux.StandbyNetAtmo2Color4 = ConfigSelection(choices = OffFarbe, default="0")
 LCD4linux.StandbyNetAtmo2Color5 = ConfigSelection(choices = OffFarbe, default="0")
 LCD4linux.StandbyNetAtmo2Color6 = ConfigSelection(choices = OffFarbe, default="0")
+LCD4linux.StandbyNetAtmo2Color7 = ConfigSelection(choices = OffFarbe, default="0")
 LCD4linux.StandbyNetAtmo2Shadow = ConfigYesNo(default = False)
 LCD4linux.StandbyNetAtmo2Font = ConfigSelection(choices = FontType, default="0")
 LCD4linux.StandbyNetAtmoCO2 = ConfigSelection(choices = ScreenSelect, default="0")
@@ -2274,7 +2295,8 @@ def GetBox():
 		f.close()
 		L4logE("Boxtype",B)
 	return B
-
+def getMJPEGrun(lcd):
+	return MJPEGrun[lcd]
 def setConfigMode(w):
 	global ConfigMode
 	ConfigMode = w
@@ -2699,6 +2721,7 @@ def find_dev(Anzahl, idVendor, idProduct):
 				gefunden = True
 	elif USBok == True:
 		try:
+			L4logE("usb.core",list(usb.core.find(idVendor=idVendor, find_all=True)))
 			if len(list(usb.core.find(idVendor=idVendor, idProduct=idProduct, find_all=True))) >= Anzahl:
 				L4logE("usb.core find")
 				gefunden = True
@@ -2709,7 +2732,7 @@ def find_dev(Anzahl, idVendor, idProduct):
 	
 def find_dev2(idVendor, idProduct, idVendor2, idProduct2):
 	gefunden = False
-	if find_dev(2,idVendor, idProduct) or find_dev(2,idVendor2, idProduct2) or (find_dev(1,idVendor, idProduct) and find_dev(1,idVendor2, idProduct2)):
+	if len(list(usb.core.find(idVendor=idVendor, idProduct=idProduct, find_all=True))+list(usb.core.find(idVendor=idVendor2, idProduct=idProduct2, find_all=True))) >= 2:
 		gefunden = True
 	L4log("Vendor=%04x ProdID=%04x or Vendor=%04x ProdID=%04x" % (idVendor,idProduct,idVendor2,idProduct2), gefunden)
 	return gefunden
@@ -2726,13 +2749,15 @@ def getpiconres(x, y, full, picon, channelname, channelname2, P2, P2A, P2C):
 			PD = ""
 			PIC = []
 			PIC.append(os.path.join(P2,picon))
-			name2=channelname.decode("utf8").encode("latin-1") + ".png"
-			name = unicodedata.normalize('NFKD', unicode(str(""+channelname), 'utf_8', errors='ignore')).encode('ASCII', 'ignore')
+			name2=channelname.decode("utf-8").encode("latin-1","ignore") + ".png"
+			name4=channelname.decode("utf-8").encode("utf-8","ignore") + ".png"
+			name = unicodedata.normalize('NFKD', unicode(str(""+channelname), 'utf-8', errors='ignore')).encode('ASCII', 'ignore')
 			name = re.sub('[^a-z0-9]', '', name.replace('&', 'and').replace('+', 'plus').replace('*', 'star').lower()) + ".png"
 			name3=channelname2.replace('\xc2\x87', '').replace('\xc2\x86', '').decode("utf-8").encode("utf-8") + ".png"
 			PIC.append(os.path.join(P2,name3))
 			PIC.append(os.path.join(P2,name2))
 			PIC.append(os.path.join(P2,name))
+			PIC.append(os.path.join(P2,name4))
 			fields = picon.split("_", 3)
 			if fields[0] == "4097":
 				fields[0] = "1"
@@ -2742,6 +2767,7 @@ def getpiconres(x, y, full, picon, channelname, channelname2, P2, P2A, P2C):
 				PIC.append(os.path.join(P2A,name3))
 				PIC.append(os.path.join(P2A,name2))
 				PIC.append(os.path.join(P2A,name))
+				PIC.append(os.path.join(P2A,name4))
 				fields = picon.split("_", 3)
 				if fields[0] == "4097":
 					fields[0] = "1"
@@ -3453,9 +3479,14 @@ class MJPEGHandler1(BaseHTTPRequestHandler):
 				self.end_headers()
 			while True:
 				para = MJPEG[LCD].get()
+				if para == [9,9]:
+					return
 				MJPEGreader[LCD] = 0
 				output = cStringIO.StringIO()
-				para[1].im[para[0]].save(output, "JPEG")
+				if para[0] == 9:
+					para[1].save(output, "JPEG")
+				else:
+					para[1].im[para[0]].save(output, "JPEG")
 				pic = output.getvalue()
 				output.close()
 				for i in range(int(LCD4linux.MJPEGCycle.value)):
@@ -3480,9 +3511,17 @@ class MJPEGHandler1(BaseHTTPRequestHandler):
 		return
 def MJPEG_serve1(port):
 	global MJPEGserver
+	global MJPEGrun
 	L4log("start Server 1 Port",port)
 	MJPEGserver[1] = ThreadingHTTPServer(("",port), MJPEGHandler1)
-	MJPEGserver[1].serve_forever()
+	MJPEGserver[1].socket.settimeout(3)
+	MJPEGrun[1] = 1
+	while getMJPEGrun(1) == 1:
+		try:
+			MJPEGserver[1].handle_request()
+		except:
+			L4logE("Error: Server 1 Reg")
+	L4log("exit Server 1")
 class MJPEGHandler2(BaseHTTPRequestHandler):
 	def do_GET(self):
 		global MJPEGreader
@@ -3498,9 +3537,14 @@ class MJPEGHandler2(BaseHTTPRequestHandler):
 				self.end_headers()
 			while True:
 				para = MJPEG[LCD].get()
+				if para == [9,9]:
+					return
 				MJPEGreader[LCD] = 0
 				output = cStringIO.StringIO()
-				para[1].im[para[0]].save(output, "JPEG")
+				if para[0] == 9:
+					para[1].save(output, "JPEG")
+				else:
+					para[1].im[para[0]].save(output, "JPEG")
 				pic = output.getvalue()
 				output.close()
 				for i in range(int(LCD4linux.MJPEGCycle.value)):
@@ -3524,9 +3568,18 @@ class MJPEGHandler2(BaseHTTPRequestHandler):
 	def log_message(self, format, *args):
 		return
 def MJPEG_serve2(port):
+	global MJPEGserver
+	global MJPEGrun
 	L4log("start Server 2 Port",port)
-	server = ThreadingHTTPServer(("",port), MJPEGHandler2)
-	server.serve_forever()
+	MJPEGserver[2] = ThreadingHTTPServer(("",port), MJPEGHandler2)
+	MJPEGserver[2].socket.settimeout(3)
+	MJPEGrun[2] = 1
+	while getMJPEGrun(2) == 1:
+		try:
+			MJPEGserver[2].handle_request()
+		except:
+			L4logE("Error: Server 2 Reg")
+	L4log("exit Server 2")
 class MJPEGHandler3(BaseHTTPRequestHandler):
 	def do_GET(self):
 		global MJPEGreader
@@ -3542,9 +3595,14 @@ class MJPEGHandler3(BaseHTTPRequestHandler):
 				self.end_headers()
 			while True:
 				para = MJPEG[LCD].get()
+				if para == [9,9]:
+					return
 				MJPEGreader[LCD] = 0
 				output = cStringIO.StringIO()
-				para[1].im[para[0]].save(output, "JPEG")
+				if para[0] == 9:
+					para[1].save(output, "JPEG")
+				else:
+					para[1].im[para[0]].save(output, "JPEG")
 				pic = output.getvalue()
 				output.close()
 				for i in range(int(LCD4linux.MJPEGCycle.value)):
@@ -3568,9 +3626,18 @@ class MJPEGHandler3(BaseHTTPRequestHandler):
 	def log_message(self, format, *args):
 		return
 def MJPEG_serve3(port):
+	global MJPEGserver
+	global MJPEGrun
 	L4log("start Server 3 Port",port)
-	server = ThreadingHTTPServer(("",port), MJPEGHandler3)
-	server.serve_forever()
+	MJPEGserver[3] = ThreadingHTTPServer(("",port), MJPEGHandler3)
+	MJPEGserver[3].socket.settimeout(3)
+	MJPEGrun[3] = 1
+	while getMJPEGrun(3) == 1:
+		try:
+			MJPEGserver[3].handle_request()
+		except:
+			L4logE("Error: Server 3 Reg")
+	L4log("exit Server 3")
 def MJPEG_start():
 	global MJPEGreader
 	if LCD4linux.MJPEGenable1.value == True and MJPEG[0][1]=="1":
@@ -3592,30 +3659,55 @@ def MJPEG_start():
 		th3.setDaemon(True)
 		th3.start()
 def MJPEG_stop(force):
-	if (LCD4linux.MJPEGenable1.value == False and MJPEG[0][1]=="A") or force == 1:
+	global MJPEGrun
+	stop = False
+	if (MJPEG[0][1]=="A") or force == 1:
 		L4log("stop Server 1")
 		MJPEG[0]=MJPEG[0].replace("a","A").replace("A","1")
 		try:
-			MJPEGserver[1].shutdown()
+			MJPEGrun[1]=0
+			if LCD4linux.LCDshutdown.value == True and force == 9:
+				MAX_W,MAX_H = getResolution(LCD4linux.LCDType1.value,LCD4linux.LCDRotate1.value)
+				im = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
+				for x in range(3):
+					MJPEG[1].put([9,im])
+			MJPEG[1].put([9,9])
 			MJPEGserver[1].server_close()
+			stop=True
 		except:
 			pass
-	if (LCD4linux.MJPEGenable2.value == False and MJPEG[0][2]=="B") or force == 2:
+	if (MJPEG[0][2]=="B") or force == 2:
 		L4log("stop Server 2")
 		MJPEG[0]=MJPEG[0].replace("b","B").replace("B","2")
 		try:
-			MJPEGserver[2].shutdown()
+			MJPEGrun[2]=0
+			if LCD4linux.LCDshutdown.value == True and force == 9:
+				MAX_W,MAX_H = getResolution(LCD4linux.LCDType2.value,LCD4linux.LCDRotate2.value)
+				im = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
+				for x in range(3):
+					MJPEG[2].put([9,im])
+			MJPEG[2].put([9,9])
 			MJPEGserver[2].server_close()
+			stop=True
 		except:
 			pass
-	if (LCD4linux.MJPEGenable3.value == False and MJPEG[0][3]=="C") or force == 3:
+	if (MJPEG[0][3]=="C") or force == 3:
 		L4log("stop Server 3")
 		MJPEG[0]=MJPEG[0].replace("c","C").replace("C","3")
 		try:
-			MJPEGserver[3].shutdown()
+			MJPEGrun[3]=0
+			if LCD4linux.LCDshutdown.value == True and force == 9:
+				MAX_W,MAX_H = getResolution(LCD4linux.LCDType3.value,LCD4linux.LCDRotate3.value)
+				im = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
+				for x in range(3):
+					MJPEG[3].put([9,im])
+			MJPEG[3].put([9,9])
 			MJPEGserver[3].server_close()
+			stop=True
 		except:
 			pass
+	if stop:
+		sleep(5)
 
 def getWWW():
 	if (str(LCD4linux.WWW1.value) != "0" and len(LCD4linux.WWW1url.value)>10) and (not Standby.inStandby or isMediaPlayer == "sonos" or isMediaPlayer == "ymc"):
@@ -4500,7 +4592,9 @@ class L4LWorker(Thread):
 					L4log("Error: no ICS found",name)
 					return
 			except:
+				from traceback import format_exc
 				L4log("Error: ICS Open",name)
+				L4log("Error:",format_exc() )
 				return
 			if r is not None:
 				L4log("Read ICS",name)
@@ -5844,6 +5938,7 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 				self.list2.append(getConfigListEntry(_("- Color 3"), LCD4linux.NetAtmo2Color4))
 				self.list2.append(getConfigListEntry(_("- Color 4"), LCD4linux.NetAtmo2Color5))
 				self.list2.append(getConfigListEntry(_("- Color 5"), LCD4linux.NetAtmo2Color6))
+				self.list2.append(getConfigListEntry(_("- Color 6"), LCD4linux.NetAtmo2Color7))
 				self.list2.append(getConfigListEntry(_("- Shadow Edges"), LCD4linux.NetAtmo2Shadow))
 				self.list2.append(getConfigListEntry(_("- Font"), LCD4linux.NetAtmo2Font))
 			self.list2.append(getConfigListEntry(_("Netatmo CO2 Indicator"), LCD4linux.NetAtmoCO2))
@@ -6470,6 +6565,7 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 				self.list3.append(getConfigListEntry(_("- Color 3"), LCD4linux.MPNetAtmo2Color4))
 				self.list3.append(getConfigListEntry(_("- Color 4"), LCD4linux.MPNetAtmo2Color5))
 				self.list3.append(getConfigListEntry(_("- Color 5"), LCD4linux.MPNetAtmo2Color6))
+				self.list3.append(getConfigListEntry(_("- Color 6"), LCD4linux.MPNetAtmo2Color7))
 				self.list3.append(getConfigListEntry(_("- Shadow Edges"), LCD4linux.MPNetAtmo2Shadow))
 				self.list3.append(getConfigListEntry(_("- Font"), LCD4linux.MPNetAtmo2Font))
 			self.list3.append(getConfigListEntry(_("Netatmo CO2 Indicator"), LCD4linux.MPNetAtmoCO2))
@@ -6961,6 +7057,7 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 				self.list4.append(getConfigListEntry(_("- Color 3"), LCD4linux.StandbyNetAtmo2Color4))
 				self.list4.append(getConfigListEntry(_("- Color 4"), LCD4linux.StandbyNetAtmo2Color5))
 				self.list4.append(getConfigListEntry(_("- Color 5"), LCD4linux.StandbyNetAtmo2Color6))
+				self.list4.append(getConfigListEntry(_("- Color 6"), LCD4linux.StandbyNetAtmo2Color7))
 				self.list4.append(getConfigListEntry(_("- Shadow Edges"), LCD4linux.StandbyNetAtmo2Shadow))
 				self.list4.append(getConfigListEntry(_("- Font"), LCD4linux.StandbyNetAtmo2Font))
 			self.list4.append(getConfigListEntry(_("Netatmo CO2 Indicator"), LCD4linux.StandbyNetAtmoCO2))
@@ -7529,8 +7626,8 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 		if LCD4linux.TV.value == "0":
 			TVrunning == False
 		if LCD4linux.MJPEGenable1.isChanged() or LCD4linux.MJPEGenable2.isChanged() or LCD4linux.MJPEGenable3.isChanged():
-			MJPEG_start()
 			MJPEG_stop("")
+			MJPEG_start()
 		if LCD4linux.xmlLCDType.isChanged():
 			xmlRead()
 			if xmlDelete(1) or xmlDelete(2) or xmlDelete(3):
@@ -8204,6 +8301,9 @@ class UpdateStatus(Screen):
 		global ScreenTime
 		global ThreadRunning
 		global FritzTime
+		global SamsungDevice
+		global SamsungDevice2
+		global SamsungDevice3
 		self.StatusTimer.stop()
 		if not LCD4linux.Enable.value or ThreadRunning > 0:
 			if ThreadRunning > 0:
@@ -8409,6 +8509,11 @@ class UpdateStatus(Screen):
 						DpfCheckSerial()
 				if LCD4linux.LCDType1.value[0] == "2" or LCD4linux.LCDType2.value[0] == "2" or LCD4linux.LCDType3.value[0] == "2":
 					if SamsungCheck():
+						SamsungDevice = None
+						SamsungDevice2 = None
+						SamsungDevice3 = None
+						rmFiles(PIC + "*.*")
+						L4log("reset all Samsung LCD!")
 						self.SamsungStart()
 				if strftime("%M") in LCD4linux.WwwTime.value:
 					getWWW()
@@ -8543,6 +8648,7 @@ class UpdateStatus(Screen):
 					if self.LsreftoString.startswith("1:"):
 						self.Lprovider = info.getInfoString(iServiceInformation.sProvider)
 						self.LtransponderData = info.getInfoObject(iServiceInformation.sTransponderData)
+					L4logE("self.Transponderdata2",self.LtransponderData)
 					self.LsVideoWidth = info.getInfo(iServiceInformation.sVideoWidth)
 					self.LsVideoHeight = info.getInfo(iServiceInformation.sVideoHeight)
 					self.LsIsCrypted = info.getInfo(iServiceInformation.sIsCrypted) 
@@ -9955,13 +10061,15 @@ def LCD4linuxPIC(self,session):
 					ret=""
 					PIC = []
 					PIC.append(os.path.join(P2,picon))
-					name = unicodedata.normalize('NFKD', unicode(str(""+self.Lchannel_name), 'utf_8', errors='ignore')).encode('ASCII', 'ignore')
+					name = unicodedata.normalize('NFKD', unicode(str(""+self.Lchannel_name), 'utf-8', errors='ignore')).encode('ASCII', 'ignore')
 					name = re.sub('[^a-z0-9]', '', name.replace('&', 'and').replace('+', 'plus').replace('*', 'star').lower()) + ".png"
-					name2=self.Lchannel_name.decode("utf8").encode("latin-1") + ".png"
+					name2=self.Lchannel_name.decode("utf-8").encode("latin-1","ignore") + ".png"
+					name4=self.Lchannel_name.decode("utf-8").encode("utf-8","ignore") + ".png"
 					name3=self.Lchannel_name2.replace('\xc2\x87', '').replace('\xc2\x86', '').decode("utf-8").encode("utf-8") + ".png"
 					PIC.append(os.path.join(P2,name3))
 					PIC.append(os.path.join(P2,name2))
 					PIC.append(os.path.join(P2,name))
+					PIC.append(os.path.join(P2,name4))
 					fields = picon.split("_", 3)
 					if fields[0] == "4097":
 						fields[0] = "1"
@@ -9970,6 +10078,7 @@ def LCD4linuxPIC(self,session):
 						PIC.append(os.path.join(P2A,name3))
 						PIC.append(os.path.join(P2A,name2))
 						PIC.append(os.path.join(P2A,name))
+						PIC.append(os.path.join(P2A,name4))
 						fields = picon.split("_", 3)
 						if fields[0] == "4097":
 							fields[0] = "1"
@@ -11088,13 +11197,15 @@ def LCD4linuxPIC(self,session):
 				useCache = False
 				PIC = []
 				PIC.append(os.path.join(P2,picon))
-				name = unicodedata.normalize('NFKD', unicode(str(""+self.Lchannel_name), 'utf_8', errors='ignore')).encode('ASCII', 'ignore')
+				name = unicodedata.normalize('NFKD', unicode(str(""+self.Lchannel_name), 'utf-8', errors='ignore')).encode('ASCII', 'ignore')
 				name = re.sub('[^a-z0-9]', '', name.replace('&', 'and').replace('+', 'plus').replace('*', 'star').lower()) + ".png"
-				name2=self.Lchannel_name.decode("utf8").encode("latin-1") + ".png"
+				name2=self.Lchannel_name.decode("utf-8").encode("latin-1","ignore") + ".png"
+				name4=self.Lchannel_name.decode("utf-8").encode("latin-1","ignore") + ".png"
 				name3=self.Lchannel_name2.replace('\xc2\x87', '').replace('\xc2\x86', '').decode("utf-8").encode("utf-8") + ".png"
 				PIC.append(os.path.join(P2,name3))
 				PIC.append(os.path.join(P2,name2))
 				PIC.append(os.path.join(P2,name))
+				PIC.append(os.path.join(P2,name4))
 				fields = picon.split("_", 3)
 				if fields[0] == "4097":
 					fields[0] = "1"
@@ -11104,6 +11215,7 @@ def LCD4linuxPIC(self,session):
 					PIC.append(os.path.join(P2A,name3))
 					PIC.append(os.path.join(P2A,name2))
 					PIC.append(os.path.join(P2A,name))
+					PIC.append(os.path.join(P2A,name4))
 					fields = picon.split("_", 3)
 					if fields[0] == "4097":
 						fields[0] = "1"
@@ -11256,7 +11368,7 @@ def LCD4linuxPIC(self,session):
 			else:
 				ms = 1
 			font = ImageFont.truetype(ConfigFont, int(ConfigSize*ms)+8, encoding='unic') #5
-			if self.Lpath and ":0:" not in self.Lpath: # Movie
+			if self.Lpath and ":0:" not in self.Lpath and "//" not in self.Lpath: # Movie
 				isVideoPlaying = 1
 				if self.Llength is not None:
 					length = self.Llength
@@ -11572,7 +11684,7 @@ def LCD4linuxPIC(self,session):
 				return
 			if transponderData.has_key("tuner_type"):
 				orbital=""
-				if (transponderData["tuner_type"] == "DVB-S") or (transponderData["tuner_type"] == "DVB-S2") or (transponderData["tuner_type"] == 0):
+				if (transponderData["tuner_type"] == "DVB-S") or (transponderData["tuner_type"] == "DVB-S2") or (transponderData["tuner_type"] == feSatellite ):
 					orbital = transponderData["orbital_position"]
 					L4logE("Orbital",orbital)
 					orbital = int(orbital)
@@ -11599,9 +11711,10 @@ def LCD4linuxPIC(self,session):
 										SAT[position]=name
 										L4logE(position,name)
 						orbital = SAT.get(orbital,orbital)
+						L4logE("Orbital",orbital)
 				else:
 					if isinstance(transponderData["tuner_type"],int):
-						orbital = { 0 : 'DVB-S', 1 : 'DVB-C', 2 : 'DVB-T' }.get(transponderData["tuner_type"], "-")
+						orbital = { feCable : 'DVB-C', feSatellite : 'DVB-S', feTerrestrial : 'DVB-T' }.get(transponderData["tuner_type"], "-")
 					else:
 						orbital = transponderData["tuner_type"]
 					L4logE("Orbital2",orbital)
@@ -13716,7 +13829,7 @@ def LCD4linuxPIC(self,session):
 # Netatmo
 				Para = LCD4linux.StandbyNetAtmoPos.value,LCD4linux.StandbyNetAtmoSize.value,LCD4linux.StandbyNetAtmoAlign.value,LCD4linux.StandbyNetAtmoSplit.value,LCD4linux.StandbyNetAtmoStation.value,LCD4linux.StandbyNetAtmoModule.value,LCD4linux.StandbyNetAtmoModuleUser.value,LCD4linux.StandbyNetAtmoBasis.value,LCD4linux.StandbyNetAtmoName.value,LCD4linux.StandbyNetAtmoType.value,LCD4linux.StandbyNetAtmoType2.value,[LCD4linux.StandbyNetAtmoColor.value,LCD4linux.StandbyNetAtmoColor2.value,LCD4linux.StandbyNetAtmoColor3.value,LCD4linux.StandbyNetAtmoColor4.value,LCD4linux.StandbyNetAtmoColor5.value,LCD4linux.StandbyNetAtmoColor6.value,LCD4linux.StandbyNetAtmoColor7.value],LCD4linux.StandbyNetAtmoShadow.value,getFont(LCD4linux.StandbyNetAtmoFont.value)
 				Lput(LCD4linux.StandbyNetAtmoLCD.value,LCD4linux.StandbyNetAtmo.value,putNetatmo,Para)
-				Para = LCD4linux.StandbyNetAtmo2Pos.value,LCD4linux.StandbyNetAtmo2Size.value,LCD4linux.StandbyNetAtmo2Align.value,LCD4linux.StandbyNetAtmo2Split.value,LCD4linux.StandbyNetAtmo2Station.value,LCD4linux.StandbyNetAtmo2Module.value,LCD4linux.StandbyNetAtmo2ModuleUser.value,LCD4linux.StandbyNetAtmo2Basis.value,LCD4linux.StandbyNetAtmo2Name.value,LCD4linux.StandbyNetAtmo2Type.value,LCD4linux.StandbyNetAtmo2Type2.value,[LCD4linux.StandbyNetAtmo2Color.value,LCD4linux.StandbyNetAtmo2Color2.value,LCD4linux.StandbyNetAtmo2Color3.value,LCD4linux.StandbyNetAtmo2Color4.value,LCD4linux.StandbyNetAtmo2Color6.value],LCD4linux.StandbyNetAtmo2Shadow.value,getFont(LCD4linux.StandbyNetAtmo2Font.value)
+				Para = LCD4linux.StandbyNetAtmo2Pos.value,LCD4linux.StandbyNetAtmo2Size.value,LCD4linux.StandbyNetAtmo2Align.value,LCD4linux.StandbyNetAtmo2Split.value,LCD4linux.StandbyNetAtmo2Station.value,LCD4linux.StandbyNetAtmo2Module.value,LCD4linux.StandbyNetAtmo2ModuleUser.value,LCD4linux.StandbyNetAtmo2Basis.value,LCD4linux.StandbyNetAtmo2Name.value,LCD4linux.StandbyNetAtmo2Type.value,LCD4linux.StandbyNetAtmo2Type2.value,[LCD4linux.StandbyNetAtmo2Color.value,LCD4linux.StandbyNetAtmo2Color2.value,LCD4linux.StandbyNetAtmo2Color3.value,LCD4linux.StandbyNetAtmo2Color4.value,LCD4linux.StandbyNetAtmo2Color6.value,LCD4linux.StandbyNetAtmo2Color7.value],LCD4linux.StandbyNetAtmo2Shadow.value,getFont(LCD4linux.StandbyNetAtmo2Font.value)
 				Lput(LCD4linux.StandbyNetAtmo2LCD.value,LCD4linux.StandbyNetAtmo2.value,putNetatmo,Para)
 # Box 1
 				Para = LCD4linux.StandbyBox1x1.value,LCD4linux.StandbyBox1y1.value,LCD4linux.StandbyBox1x2.value,LCD4linux.StandbyBox1y2.value,LCD4linux.StandbyBox1Color.value,LCD4linux.StandbyBox1BackColor.value
@@ -13867,7 +13980,7 @@ def LCD4linuxPIC(self,session):
 # Netatmo
 			Para = LCD4linux.MPNetAtmoPos.value,LCD4linux.MPNetAtmoSize.value,LCD4linux.MPNetAtmoAlign.value,LCD4linux.MPNetAtmoSplit.value,LCD4linux.MPNetAtmoStation.value,LCD4linux.MPNetAtmoModule.value,LCD4linux.MPNetAtmoModuleUser.value,LCD4linux.MPNetAtmoBasis.value,LCD4linux.MPNetAtmoName.value,LCD4linux.MPNetAtmoType.value,LCD4linux.MPNetAtmoType2.value,[LCD4linux.MPNetAtmoColor.value,LCD4linux.MPNetAtmoColor2.value,LCD4linux.MPNetAtmoColor3.value,LCD4linux.MPNetAtmoColor4.value,LCD4linux.MPNetAtmoColor5.value,LCD4linux.MPNetAtmoColor6.value,LCD4linux.MPNetAtmoColor7.value],LCD4linux.MPNetAtmoShadow.value,getFont(LCD4linux.MPNetAtmoFont.value)
 			Lput(LCD4linux.MPNetAtmoLCD.value,LCD4linux.MPNetAtmo.value,putNetatmo,Para)
-			Para = LCD4linux.MPNetAtmo2Pos.value,LCD4linux.MPNetAtmo2Size.value,LCD4linux.MPNetAtmo2Align.value,LCD4linux.MPNetAtmo2Split.value,LCD4linux.MPNetAtmo2Station.value,LCD4linux.MPNetAtmo2Module.value,LCD4linux.MPNetAtmo2ModuleUser.value,LCD4linux.MPNetAtmo2Basis.value,LCD4linux.MPNetAtmo2Name.value,LCD4linux.MPNetAtmo2Type.value,LCD4linux.MPNetAtmo2Type2.value,[LCD4linux.MPNetAtmo2Color.value,LCD4linux.MPNetAtmo2Color2.value,LCD4linux.MPNetAtmo2Color3.value,LCD4linux.MPNetAtmo2Color4.value,LCD4linux.MPNetAtmo2Color5.value,LCD4linux.MPNetAtmo2Color6.value],LCD4linux.MPNetAtmo2Shadow.value,getFont(LCD4linux.MPNetAtmo2Font.value)
+			Para = LCD4linux.MPNetAtmo2Pos.value,LCD4linux.MPNetAtmo2Size.value,LCD4linux.MPNetAtmo2Align.value,LCD4linux.MPNetAtmo2Split.value,LCD4linux.MPNetAtmo2Station.value,LCD4linux.MPNetAtmo2Module.value,LCD4linux.MPNetAtmo2ModuleUser.value,LCD4linux.MPNetAtmo2Basis.value,LCD4linux.MPNetAtmo2Name.value,LCD4linux.MPNetAtmo2Type.value,LCD4linux.MPNetAtmo2Type2.value,[LCD4linux.MPNetAtmo2Color.value,LCD4linux.MPNetAtmo2Color2.value,LCD4linux.MPNetAtmo2Color3.value,LCD4linux.MPNetAtmo2Color4.value,LCD4linux.MPNetAtmo2Color5.value,LCD4linux.MPNetAtmo2Color6.value,LCD4linux.MPNetAtmo2Color7.value],LCD4linux.MPNetAtmo2Shadow.value,getFont(LCD4linux.MPNetAtmo2Font.value)
 			Lput(LCD4linux.MPNetAtmo2LCD.value,LCD4linux.MPNetAtmo2.value,putNetatmo,Para)
 # Meteo station
 			if wwwMeteo.find("current_conditions") > 1:
@@ -14069,7 +14182,7 @@ def LCD4linuxPIC(self,session):
 # Netatmo
 			Para = LCD4linux.NetAtmoPos.value,LCD4linux.NetAtmoSize.value,LCD4linux.NetAtmoAlign.value,LCD4linux.NetAtmoSplit.value,LCD4linux.NetAtmoStation.value,LCD4linux.NetAtmoModule.value,LCD4linux.NetAtmoModuleUser.value,LCD4linux.NetAtmoBasis.value,LCD4linux.NetAtmoName.value,LCD4linux.NetAtmoType.value,LCD4linux.NetAtmoType2.value,[LCD4linux.NetAtmoColor.value,LCD4linux.NetAtmoColor2.value,LCD4linux.NetAtmoColor3.value,LCD4linux.NetAtmoColor4.value,LCD4linux.NetAtmoColor5.value,LCD4linux.NetAtmoColor6.value,LCD4linux.NetAtmoColor7.value],LCD4linux.NetAtmoShadow.value,getFont(LCD4linux.NetAtmoFont.value)
 			Lput(LCD4linux.NetAtmoLCD.value,LCD4linux.NetAtmo.value,putNetatmo,Para)
-			Para = LCD4linux.NetAtmo2Pos.value,LCD4linux.NetAtmo2Size.value,LCD4linux.NetAtmo2Align.value,LCD4linux.NetAtmo2Split.value,LCD4linux.NetAtmo2Station.value,LCD4linux.NetAtmo2Module.value,LCD4linux.NetAtmo2ModuleUser.value,LCD4linux.NetAtmo2Basis.value,LCD4linux.NetAtmo2Name.value,LCD4linux.NetAtmo2Type.value,LCD4linux.NetAtmo2Type2.value,[LCD4linux.NetAtmo2Color.value,LCD4linux.NetAtmo2Color2.value,LCD4linux.NetAtmo2Color3.value,LCD4linux.NetAtmo2Color4.value,LCD4linux.NetAtmo2Color5.value,LCD4linux.NetAtmo2Color6.value],LCD4linux.NetAtmo2Shadow.value,getFont(LCD4linux.NetAtmo2Font.value)
+			Para = LCD4linux.NetAtmo2Pos.value,LCD4linux.NetAtmo2Size.value,LCD4linux.NetAtmo2Align.value,LCD4linux.NetAtmo2Split.value,LCD4linux.NetAtmo2Station.value,LCD4linux.NetAtmo2Module.value,LCD4linux.NetAtmo2ModuleUser.value,LCD4linux.NetAtmo2Basis.value,LCD4linux.NetAtmo2Name.value,LCD4linux.NetAtmo2Type.value,LCD4linux.NetAtmo2Type2.value,[LCD4linux.NetAtmo2Color.value,LCD4linux.NetAtmo2Color2.value,LCD4linux.NetAtmo2Color3.value,LCD4linux.NetAtmo2Color4.value,LCD4linux.NetAtmo2Color5.value,LCD4linux.NetAtmo2Color6.value,LCD4linux.NetAtmo2Color7.value],LCD4linux.NetAtmo2Shadow.value,getFont(LCD4linux.NetAtmo2Font.value)
 			Lput(LCD4linux.NetAtmo2LCD.value,LCD4linux.NetAtmo2.value,putNetatmo,Para)
 # Meteo station
 			if wwwMeteo.find("current_conditions") > 1:
@@ -14345,42 +14458,43 @@ def autostart(reason, **kwargs):
 			except:
 				L4log("Helligkeit-Error -> Fallback")
 				Dunkel=writeHelligkeit([0,0,0],[0,0,0],False)
-		if SamsungDevice is not None and LCD4linux.LCDType1.value[0] == "2":
-			try:
-				MAX_W,MAX_H = getResolution(LCD4linux.LCDType1.value,LCD4linux.LCDRotate1.value)
-				im = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
-				output = cStringIO.StringIO()
-				im.save(output, "JPEG")
-				pic = output.getvalue()
-				output.close()
-				Photoframe.write_jpg2frame(SamsungDevice, pic)
-				SamsungDevice = None
-			except:
-				pass
-		if SamsungDevice2 is not None and LCD4linux.LCDType2.value[0] == "2":
-			try:
-				MAX_W,MAX_H = getResolution(LCD4linux.LCDType2.value,LCD4linux.LCDRotate2.value)
-				im = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
-				output = cStringIO.StringIO()
-				im.save(output, "JPEG")
-				pic = output.getvalue()
-				output.close()
-				Photoframe.write_jpg2frame(SamsungDevice2, pic)
-				SamsungDevice2 = None
-			except:
-				pass
-		if SamsungDevice3 is not None and LCD4linux.LCDType3.value[0] == "2":
-			try:
-				MAX_W,MAX_H = getResolution(LCD4linux.LCDType3.value,LCD4linux.LCDRotate3.value)
-				im = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
-				output = cStringIO.StringIO()
-				im.save(output, "JPEG")
-				pic = output.getvalue()
-				output.close()
-				Photoframe.write_jpg2frame(SamsungDevice3, pic)
-				SamsungDevice3 = None
-			except:
-				pass
+			if SamsungDevice is not None and LCD4linux.LCDType1.value[0] == "2":
+				try:
+					MAX_W,MAX_H = getResolution(LCD4linux.LCDType1.value,LCD4linux.LCDRotate1.value)
+					im = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
+					output = cStringIO.StringIO()
+					im.save(output, "JPEG")
+					pic = output.getvalue()
+					output.close()
+					Photoframe.write_jpg2frame(SamsungDevice, pic)
+					SamsungDevice = None
+				except:
+					pass
+			if SamsungDevice2 is not None and LCD4linux.LCDType2.value[0] == "2":
+				try:
+					MAX_W,MAX_H = getResolution(LCD4linux.LCDType2.value,LCD4linux.LCDRotate2.value)
+					im = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
+					output = cStringIO.StringIO()
+					im.save(output, "JPEG")
+					pic = output.getvalue()
+					output.close()
+					Photoframe.write_jpg2frame(SamsungDevice2, pic)
+					SamsungDevice2 = None
+				except:
+					pass
+			if SamsungDevice3 is not None and LCD4linux.LCDType3.value[0] == "2":
+				try:
+					MAX_W,MAX_H = getResolution(LCD4linux.LCDType3.value,LCD4linux.LCDRotate3.value)
+					im = Image.new('RGB', (MAX_W, MAX_H), (0, 0, 0, 0))
+					output = cStringIO.StringIO()
+					im.save(output, "JPEG")
+					pic = output.getvalue()
+					output.close()
+					Photoframe.write_jpg2frame(SamsungDevice3, pic)
+					SamsungDevice3 = None
+				except:
+					pass
+		MJPEG_stop(9)
 
 def Plugins(**kwargs):
 	list = [
