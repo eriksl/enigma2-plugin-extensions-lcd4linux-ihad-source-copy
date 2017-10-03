@@ -155,7 +155,6 @@ config.TunerPos=408
 config.TunerSize=44
 config.TV=2
 config.TVType=1
-config.WebIfAllow=10.1.10.
 config.WebIfType=1
 config.WetterExtra=false
 config.WetterLine=false

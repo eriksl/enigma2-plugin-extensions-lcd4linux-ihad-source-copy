@@ -153,7 +153,6 @@ config.TunerColorActive=yellow
 config.TunerColorOn=cyan
 config.TunerPos=264
 config.TunerSize=34
-config.WebIfAllow=10.1.10.
 config.WebIfType=1
 config.WetterExtra=false
 config.WetterLine=false
