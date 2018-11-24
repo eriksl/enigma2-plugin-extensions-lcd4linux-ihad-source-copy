@@ -1,0 +1,9 @@
+#!/bin/sh
+if [ -f /etc/enigma2/skin_user.xml ] 
+then
+if grep -q PixmapLcd4linux "/etc/enigma2/skin_user.xml"
+then
+echo "Rename skin_user.xml (crash risk)"
+mv /etc/enigma2/skin_user.xml /etc/enigma2/skin_user.xml.old
+fi
+fi
