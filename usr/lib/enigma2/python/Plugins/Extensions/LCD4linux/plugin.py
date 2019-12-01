@@ -14,7 +14,7 @@
 #  Advertise with this Plugin is not allowed.
 #  For other uses, permission from the author is necessary.
 #
-Version = "V5.0-r4"
+Version = "V5.0-r6"
 from __init__ import _
 from enigma import eConsoleAppContainer, eActionMap, iServiceInformation, iFrontendInformation, eDVBResourceManager, eDVBVolumecontrol
 from enigma import getDesktop, getEnigmaVersionString
@@ -452,17 +452,17 @@ LCD4linux.MeteoURL = ConfigText(default="http://", fixed_size=False, visible_wid
 LCD4linux.MoonPath = ConfigText(default="", fixed_size=False, visible_width=50)
 LCD4linux.BlueIP = ConfigText(default="", fixed_size=False, visible_width=50)
 LCD4linux.BlueServerIP = ConfigText(default="", fixed_size=False, visible_width=50)
-LCD4linux.BluePingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (0, 1000))
+LCD4linux.BluePingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (0, 2000))
 LCD4linux.BlueTimer = ConfigSelection(choices =  [("1", _("1")), ("2", _("2")), ("3", _("3")), ("5", _("5")), ("10", _("10")), ("20", _("20")), ("30", _("30")), ("60", _("60"))], default="10")
 LCD4linux.BlueCheckTimer = ConfigSelection(choices = [("2", _("10s")), ("3", _("15s")), ("4", _("20s")), ("6", _("30s")), ("12", _("1min")), ("24", _("2min"))], default="12")
 LCD4linux.SonosIP = ConfigText(default="", fixed_size=False, visible_width=50)
 LCD4linux.SonosON = ConfigYesNo(default = False)
-LCD4linux.SonosPingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (0, 1000))
+LCD4linux.SonosPingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (0, 2000))
 LCD4linux.SonosTimer = ConfigSelection(choices =  [("1", _("1")), ("2", _("2")), ("3", _("3")), ("5", _("5")), ("10", _("10")), ("20", _("20")), ("30", _("30")), ("60", _("60"))], default="10")
 LCD4linux.SonosCheckTimer = ConfigSelection(choices = [("2", _("10s")), ("3", _("15s")), ("4", _("20s")), ("6", _("30s")), ("12", _("1min")), ("24", _("2min"))], default="12")
 LCD4linux.YMCastIP = ConfigText(default="", fixed_size=False, visible_width=50)
 LCD4linux.YMCastServerIP = ConfigText(default="", fixed_size=False, visible_width=50)
-LCD4linux.YMCastPingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (0, 1000))
+LCD4linux.YMCastPingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (0, 2000))
 LCD4linux.YMCastTimer = ConfigSelection(choices =  [("1", _("1")), ("2", _("2")), ("3", _("3")), ("5", _("5")), ("10", _("10")), ("20", _("20")), ("30", _("30")), ("60", _("60"))], default="10")
 LCD4linux.YMCastCheckTimer = ConfigSelection(choices = [("2", _("10s")), ("3", _("15s")), ("4", _("20s")), ("6", _("30s")), ("12", _("1min")), ("24", _("2min"))], default="12")
 LCD4linux.YMCastCover = ConfigSelection(choices = [("0", _("MusicCast")), ("1", _("Coversearch"))], default = "0")
@@ -720,7 +720,7 @@ LCD4linux.ChannelLCD = ConfigSelection(choices = LCDSelect, default="1")
 LCD4linux.ChannelSize = ConfigSlider(default = 50,  increment = 2, limits = (10, 300))
 LCD4linux.ChannelLen = ConfigSelection(choices = ProzentType, default="100")
 LCD4linux.ChannelPos = ConfigSlider(default = 10,  increment = 2, limits = (0, 1024))
-LCD4linux.ChannelLines = ConfigSelectionNumber(1, 9, 1, default = 1)
+LCD4linux.ChannelLines = ConfigSelectionNumber(0, 9, 1, default = 1)
 LCD4linux.ChannelAlign = ConfigSelection(choices = AlignType, default="1")
 LCD4linux.ChannelSplit = ConfigYesNo(default = False)
 LCD4linux.ChannelColor = ConfigSelection(choices = Farbe, default="white")
@@ -863,7 +863,7 @@ LCD4linux.TunerSize = ConfigSlider(default = 22,  increment = 1, limits = (10, 1
 LCD4linux.TunerPos = ConfigSlider(default = 0,  increment = 2, limits = (0, 1024))
 LCD4linux.TunerAlign = ConfigSelection(choices = AlignType, default="0")
 LCD4linux.TunerSplit = ConfigYesNo(default = False)
-LCD4linux.TunerType = ConfigSelection(choices = DirType, default="0")
+LCD4linux.TunerType = ConfigSelection(choices = DirType + [("1", _("horizontally")+" x2")], default="0")
 LCD4linux.TunerActive = ConfigYesNo(default = False)
 LCD4linux.TunerFont = ConfigSelection(choices = FontType, default="0")
 LCD4linux.Vol = ConfigSelection(choices = ScreenSelect, default="0")
@@ -886,7 +886,7 @@ LCD4linux.PingShadow = ConfigYesNo(default = False)
 LCD4linux.PingFont = ConfigSelection(choices = FontType, default="0")
 LCD4linux.PingShow = ConfigSelection(choices = [("0", _("Online+Offline")), ("1", _("Online")), ("2", _("Offline"))], default="0")
 LCD4linux.PingType = ConfigSelection(choices = DirType, default="0")
-LCD4linux.PingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (5, 1000))
+LCD4linux.PingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (5, 2000))
 LCD4linux.PingName1 = ConfigText(default="Internet:www.google.de", fixed_size=False)
 LCD4linux.PingName2 = ConfigText(default="", fixed_size=False)
 LCD4linux.PingName3 = ConfigText(default="", fixed_size=False)
@@ -1309,7 +1309,7 @@ LCD4linux.MPChannel = ConfigSelection(choices = ScreenSelect, default="0")
 LCD4linux.MPChannelLCD = ConfigSelection(choices = LCDSelect, default="1")
 LCD4linux.MPChannelSize = ConfigSlider(default = 50,  increment = 2, limits = (10, 300))
 LCD4linux.MPChannelPos = ConfigSlider(default = 10,  increment = 2, limits = (0, 1024))
-LCD4linux.MPChannelLines = ConfigSelectionNumber(1, 9, 1, default = 1)
+LCD4linux.MPChannelLines = ConfigSelectionNumber(0, 9, 1, default = 1)
 LCD4linux.MPChannelAlign = ConfigSelection(choices = AlignType, default="1")
 LCD4linux.MPChannelLen = ConfigSelection(choices = ProzentType, default="100")
 LCD4linux.MPChannelSplit = ConfigYesNo(default = False)
@@ -1350,7 +1350,7 @@ LCD4linux.MPPingShadow = ConfigYesNo(default = False)
 LCD4linux.MPPingFont = ConfigSelection(choices = FontType, default="0")
 LCD4linux.MPPingShow = ConfigSelection(choices = [("0", _("Online+Offline")), ("1", _("Online")), ("2", _("Offline"))], default="0")
 LCD4linux.MPPingType = ConfigSelection(choices = DirType, default="0")
-LCD4linux.MPPingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (5, 1000))
+LCD4linux.MPPingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (5, 2000))
 LCD4linux.MPPingName1 = ConfigText(default="Internet:www.google.de", fixed_size=False)
 LCD4linux.MPPingName2 = ConfigText(default="", fixed_size=False)
 LCD4linux.MPPingName3 = ConfigText(default="", fixed_size=False)
@@ -1424,7 +1424,7 @@ LCD4linux.MPTunerSize = ConfigSlider(default = 22,  increment = 1, limits = (10,
 LCD4linux.MPTunerPos = ConfigSlider(default = 0,  increment = 2, limits = (0, 1024))
 LCD4linux.MPTunerAlign = ConfigSelection(choices = AlignType, default="0")
 LCD4linux.MPTunerSplit = ConfigYesNo(default = False)
-LCD4linux.MPTunerType = ConfigSelection(choices = DirType, default="0")
+LCD4linux.MPTunerType = ConfigSelection(choices = DirType + [("1", _("horizontally")+" x2")], default="0")
 LCD4linux.MPTunerActive = ConfigYesNo(default = False)
 LCD4linux.MPTunerFont = ConfigSelection(choices = FontType, default="0")
 LCD4linux.MPInfo = ConfigSelection(choices = ScreenSelect, default="0")
@@ -1683,6 +1683,7 @@ LCD4linux.MPCoverSizeH = ConfigSlider(default = 400,  increment = 10, limits = (
 LCD4linux.MPCoverPos = ConfigSlider(default = 0,  increment = 2, limits = (0, 1024))
 LCD4linux.MPCoverAlign = ConfigSelection(choices = AlignType, default="0")
 LCD4linux.MPCoverTransp = ConfigYesNo(default = False)
+LCD4linux.MPCoverTrim = ConfigYesNo(default = False)
 LCD4linux.MPCoverPiconFirst = ConfigYesNo(default = True)
 LCD4linux.MPCoverDownload = ConfigSelection(choices = [("0", _("no")), ("1", _("yes")), ("2", _("yes except records"))], default="1")
 LCD4linux.MPCoverType = ConfigSelection(choices = [("0", _("Normal")), ("1", _("Google API"))], default="0")
@@ -1866,7 +1867,7 @@ LCD4linux.StandbyTunerSize = ConfigSlider(default = 22,  increment = 1, limits =
 LCD4linux.StandbyTunerPos = ConfigSlider(default = 0,  increment = 2, limits = (0, 1024))
 LCD4linux.StandbyTunerAlign = ConfigSelection(choices = AlignType, default="0")
 LCD4linux.StandbyTunerSplit = ConfigYesNo(default = False)
-LCD4linux.StandbyTunerType = ConfigSelection(choices = DirType, default="0")
+LCD4linux.StandbyTunerType = ConfigSelection(choices = DirType + [("1", _("horizontally")+" x2")], default="0")
 LCD4linux.StandbyTunerActive = ConfigYesNo(default = False)
 LCD4linux.StandbyTunerFont = ConfigSelection(choices = FontType, default="0")
 LCD4linux.StandbyInfo = ConfigSelection(choices = ScreenSelect, default="0")
@@ -1904,7 +1905,7 @@ LCD4linux.StandbyPingShadow = ConfigYesNo(default = False)
 LCD4linux.StandbyPingFont = ConfigSelection(choices = FontType, default="0")
 LCD4linux.StandbyPingShow = ConfigSelection(choices = [("0", _("Online+Offline")), ("1", _("Online")), ("2", _("Offline"))], default="0")
 LCD4linux.StandbyPingType = ConfigSelection(choices = DirType, default="0")
-LCD4linux.StandbyPingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (5, 1000))
+LCD4linux.StandbyPingTimeout = ConfigSlider(default = 50,  increment = 5, limits = (5, 2000))
 LCD4linux.StandbyPingName1 = ConfigText(default="Internet:www.google.de", fixed_size=False)
 LCD4linux.StandbyPingName2 = ConfigText(default="", fixed_size=False)
 LCD4linux.StandbyPingName3 = ConfigText(default="", fixed_size=False)
@@ -5152,6 +5153,7 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 		self.session = session
 		Screen.__init__(self, session)
 		L4log("init Start")
+		self.toggle = time()
 		ConfigMode = True
 		OSDon = 0
 		getBilder()
@@ -5174,8 +5176,6 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 		self.mtime2 = 0.0
 		self.mtime3 = 0.0
 
-		self.toggle = time()
-	
 		self.picload = ePicLoad()
 		if DPKG:
 			self.picload_conn = self.picload.PictureData.connect(self.setPictureCB)		
@@ -6787,6 +6787,7 @@ class LCDdisplayConfig(ConfigListScreen,Screen):
 				self.list3.append(getConfigListEntry(_("- Default Cover [ok]>"), LCD4linux.MPCoverFile))
 				self.list3.append(getConfigListEntry(_("- Picon First"), LCD4linux.MPCoverPiconFirst))
 				self.list3.append(getConfigListEntry(_("- Transparency"), LCD4linux.MPCoverTransp))
+				self.list3.append(getConfigListEntry(_("- Trimmed"), LCD4linux.MPCoverTrim))
 				self.list3.append(getConfigListEntry(_("- Download Cover"), LCD4linux.MPCoverDownload))
 				self.list3.append(getConfigListEntry(_("- Download Type"), LCD4linux.MPCoverType))
 				self.list3.append(getConfigListEntry(_("- Google API-Key console.developers.google.com/apis"), LCD4linux.MPCoverApiGoogle))
@@ -8678,7 +8679,7 @@ class UpdateStatus(Screen):
 			isVideoPlaying = 0
 			self.LgetGoogleCover = None
 			if strftime("%M")!=self.DataMinute:
-				if int(strftime("%M")) % 4 == 0:
+				if int(strftime("%M")) % 3 == 0:
 					self.getNetatmo()
 				if int(strftime("%M")) % 5 == 0:
 					self.SonosSoCo = None
@@ -8980,6 +8981,7 @@ class UpdateStatus(Screen):
 								url=""
 						else:
 							url = "http://%s%s" % (self.YMCastSoCo.IP,self.YMCastInfo.get("albumart_url",""))
+						L4logE("YMC GetPic:",url)
 						self.getSonosPic(GoogleCover,str(url))
 				if tt==0:
 					tm = 5 if pt-self.YMCastPlaytime < 5*60 else int(pt/60)+1
@@ -9360,6 +9362,13 @@ class UpdateStatus(Screen):
 				serv = e2timer.getElementsByTagName("e2justplay")
 				if len(serv) > 0 and len(serv[0].childNodes) > 0:
 					e2t.justplay=int(serv[0].childNodes[0].nodeValue)
+				serv = e2timer.getElementsByTagName("e2servicereference")
+				if len(serv) > 0 and len(serv[0].childNodes) > 0:
+					e2t.service_ref=serv[0].childNodes[0].nodeValue
+				serv = e2timer.getElementsByTagName("e2state")
+				if len(serv) > 0 and len(serv[0].childNodes) > 0:
+					e2t.state=int(serv[0].childNodes[0].nodeValue)
+					
 				self.wwwBoxTimer.append(e2t)
 				L4logE("wwwBoxTimer",e2t.values())
 
@@ -9452,7 +9461,7 @@ class UpdateStatus(Screen):
 			for curr in dom0.getElementsByTagName('forecast'):
 				High = curr.getAttribute("high")
 				Low = curr.getAttribute("low")
-				Day = curr.getAttribute("shortday")
+				Day = _(curr.getAttribute("shortday"))
 				Icon = curr.getAttribute("skycodeday") + ".png"
 				Cond = curr.getAttribute("skytextday")
 				Regen = curr.getAttribute("precip") or "0"
@@ -10000,8 +10009,10 @@ class myE2Timer(object):
 		self.end = 0
 		self.disabled = 0
 		self.justplay = 0
+		self.service_ref = ""
+		self.state = 0
 	def values(self):
-		return self.name,self.begin,self.end,self.disabled,self.justplay
+		return self.name,self.begin,self.end,self.disabled,self.justplay,self.service_ref,self.state
 
 class myHTTPClientFactory(HTTPClientFactory):
 	def __init__(self, url, method='GET', postdata=None, headers=None,
@@ -10113,9 +10124,9 @@ def MoonPhase(pos):
 		0: _("New Moon"), 
 		1: _("First Quarter"), 
 		2: _("Waxing Crescent"), 
-		3: _("Waxing Gibbous"), 
+		3: _("Waxing Moon"), 
 		4: _("Full Moon"), 
-		5: _("Waning Gibbous"), 
+		5: _("Waning Moon"), 
 		6: _("Waning Crescent"),
 		7: _("Last Quarter")
 		}[int(index) & 7]
@@ -10478,11 +10489,11 @@ def LCD4linuxPIC(self,session):
 							self.LgetGoogleCover = [Tt,isVid]
 					else:
 						L4logE("Cover wait")
-			L4log("Cover",cover)
 			if self.LgetGoogleCover is not None:
 				L4log("Google",self.LgetGoogleCover)
 			if (cover==""  or not os.path.isfile(cover)) and os.path.isfile(LCD4linux.MPCoverFile.value):
 				cover = LCD4linux.MPCoverFile.value
+		L4log("Cover",cover)
 		return cover
 
 # MSN Wetter
@@ -11235,7 +11246,7 @@ def LCD4linuxPIC(self,session):
 				else:
 					pp+=h-int(h2/(5-int(ConfigSpacing)))
 # Cover
-	def putCover((ConfigPos, ConfigSize, ConfigSizeH, ConfigAlign, ConfigTransp), ConfigLCD, draw, im):
+	def putCover((ConfigPos, ConfigSize, ConfigSizeH, ConfigAlign, ConfigTransp, ConfigTrim), ConfigLCD, draw, im):
 		MAX_W,MAX_H = self.im[im].size
 		small = ""
 		x = ConfigSize
@@ -11253,6 +11264,39 @@ def LCD4linuxPIC(self,session):
 				self.CoverName[1] = "wait"
 				try:
 					pil_image = Image.open(ShowPicture)
+					
+					if ConfigTrim:
+						xx,yy = pil_image.size
+						pix=pil_image.load()
+						if isinstance(pix[0,0],int):
+							pcheck = 255 if pix[0,0] == 255 else "x0"
+						elif len(pix[0,0]) == 3:
+							pcheck = (255,255,255) if pix[0,0] == (255,255,255) else "x(0,0,0)"
+						else:
+							pcheck = (255,255,255,255) if pix[0,0] == (255,255,255,255) else "x(0,0,0,0)"
+						L4logE("Cover Color 0,0", pix[0,0])
+						L4logE("Cover Check",pcheck)
+						x2=int(xx/2)
+						y2=int(yy/2)
+						l,o=0,0
+						r=xx-1
+						u=yy-1
+						while pix[l,y2] == pcheck and l<x2:
+							l+=1
+						l+=1
+						while pix[r,y2] == pcheck and r>x2:
+							r-=1
+						r-=1
+						while pix[x2,o] == pcheck and o<y2:
+							o+=1
+						o+=1
+						while pix[x2,u] == pcheck and u>y2:
+							u-=1
+						u-=1
+						if l>1 or o>1:
+							pil_image = pil_image.crop((l,o,r,u))
+						L4logE("Cover Trim",(l,o,r,u))
+						
 					xx,yy = pil_image.size
 					L4log("CoverSize",pil_image.size)
 					y = int(float(x)/xx*yy)
@@ -11270,7 +11314,9 @@ def LCD4linuxPIC(self,session):
 					self.CoverName[1] = ""
 					L4log("change Cover",ShowPicture)
 				except:
-					L4log("Error Coveropen")
+					self.CoverName[1] = ""
+					from traceback import format_exc
+					L4log("Error Coveropen",format_exc())
 			counter=20
 			while self.CoverName[1] == "wait" and counter > 0:
 				L4logE("Coverwait")
@@ -11412,7 +11458,6 @@ def LCD4linuxPIC(self,session):
 						elif lcd == "3":
 							Brief3.put([writeLCD3,self,0,LCD4linux.BilderJPEG.value,False])
 				except:
-					pass
 					from traceback import format_exc
 					L4log("put Grab Error:",format_exc() )
 		TVrunning = False
@@ -11501,8 +11546,9 @@ def LCD4linuxPIC(self,session):
 				timercount += 1
 		if timercount == 0:
 			if LCD4linux.ShowNoMsg.value == True:
-				w,h = self.draw[draw].textsize(_("no Timer"), font=font)
-				ShadowText(draw,POSX+h+5,ConfigPos,_("no Timer"),font,ConfigColor,ConfigShadow)
+				tx = Code_utf8(_("no Timer"))
+				w,h = self.draw[draw].textsize(tx, font=font)
+				ShadowText(draw,POSX+h+5,ConfigPos,tx,font,ConfigColor,ConfigShadow)
 		elif ConfigType2 != "0":
 			self.draw[draw].ellipse((POSX+2, ConfigPos+2, POSX+h-2, ConfigPos+h-2), fill="red")
 			if timercount>99:
@@ -11684,6 +11730,8 @@ def LCD4linuxPIC(self,session):
 			POSX = getSplit(ConfigSplit,ConfigAlign,MAX_W,w)
 			ShadowText(draw,POSX,ConfigPos,channel_name,font,ConfigColor,ConfigShadow)
 		else:
+			if ConfigLines == "0":
+				ConfigLines = "1"
 			writeMultiline(channel_name,ConfigSize,ConfigPos,ConfigLines,ConfigColor,ConfigAlign,ConfigSplit,draw,im,ConfigFont=ConfigFont,Shadow=ConfigShadow,Width=Progress)
 
 # Progress Bar
@@ -12161,7 +12209,7 @@ def LCD4linuxPIC(self,session):
 				if ConfigType == "3":
 					now = int(time())
 					sts += "  (%+d min)" % int((event_end - now)/60)
-				sts += "\n"
+				sts += "\n" if int(ConfigLines) != 1 else " "
 			sts += event_name
 			writeMultiline(sts,ConfigSize,ConfigPos,ConfigLines,ConfigColor,ConfigAlign,ConfigSplit,draw,im,ConfigFont=ConfigFont,Shadow=ConfigShadow,Width=getProgess(MAX_W,ConfigProzent))
 
@@ -12210,7 +12258,7 @@ def LCD4linuxPIC(self,session):
 						sts += " - " + ende
 					elif ConfigType == "3":
 						sts += " (%d min)" % int((event_end - event_begin)/60)
-					sts += "\n"
+					sts += "\n" if int(ConfigLines) != 1 else " "
 				sts += event_name
 				writeMultiline(sts,ConfigSize,ConfigPos,ConfigLines,ConfigColor,ConfigAlign,ConfigSplit,draw,im,ConfigFont=ConfigFont,Shadow=ConfigShadow,Width=getProgess(MAX_W,ConfigProzent))
 
@@ -12256,11 +12304,13 @@ def LCD4linuxPIC(self,session):
 		if self.Ltuner_number is not None:
 			number = self.Ltuner_number
 		i = ""
+		Tcount = 0
 		font = ImageFont.truetype(ConfigFont, ConfigSize, encoding='unic')
 		w,h = self.draw[draw].textsize("A ", font=font)
-		if ConfigType == "0":
+		if ConfigType == "2":
+			lx = getSplit(ConfigSplit,ConfigAlign,MAX_W,w)
+		else:
 			if ConfigActive == True:
-				Tcount = 0
 				count = 1
 				for x in range(TunerCount):
 					if TunerMask & count != 0:
@@ -12268,13 +12318,16 @@ def LCD4linuxPIC(self,session):
 					count *= 2
 			else:
 				Tcount = TunerCount
+			if ConfigType == "1":
+				Tcount = int(round(Tcount/2.))
 			lx = getSplit(ConfigSplit,ConfigAlign,MAX_W,int(w*Tcount))
-		else:
-			lx = getSplit(ConfigSplit,ConfigAlign,MAX_W,w)
 		if ConfigAlign == "0":
 			w1,h1 = self.draw[draw].textsize(" ", font=font)
 			lx += w1
 		ly = ConfigPos
+		lxS = lx
+		TcountS = Tcount
+		Tcount = 0
 		count = 1
 		for x in range(TunerCount):
 			isON = True
@@ -12286,16 +12339,20 @@ def LCD4linuxPIC(self,session):
 			else:
 				c = LCD4linux.TunerColor.value
 				isON = False
+			Tcount += 1
 			count *= 2
 			w1,h1 = self.draw[draw].textsize("A", font=font)
 			if isON:
 				self.draw[draw].rectangle((lx-1,ly,lx+w1,ly+h1), outline=c, fill="black")
 			if (ConfigActive == True and isON) or ConfigActive == False:
 				self.draw[draw].text((lx, ly), chr(ord('A') + x), font=font, fill=c)
-				if ConfigType == "0":
-					lx += w
-				else:
+				if ConfigType == "1" and TcountS == Tcount:
 					ly += h+1
+					lx = lxS
+				elif ConfigType == "2":
+					ly += h+1
+				else:
+					lx += w
 
 # TunerInfo + Sensors
 	def putInfo((ConfigPos, ConfigSize, ConfigAlign, ConfigLines, ConfigSplit, ConfigColor, ConfigInfo, ConfigShadow, ConfigFont), draw, im):
@@ -12709,12 +12766,12 @@ def LCD4linuxPIC(self,session):
 				for line in open(LCD4linux.OSCAMFile.value,"r").readlines():
 					line = Code_utf8(line.replace('\n',''))
 					w,h = self.draw[draw].textsize(line, font=font)
-					if ConfigBackColor !="0":
-						if line.find(" Label ") > 0:
-							self.draw[draw].rectangle((POSX, current_h, POSX+MAX_W, current_h+h),fill=ConfigColor)
-						else:
-							self.draw[draw].rectangle((POSX, current_h, POSX+MAX_W, current_h+h),fill=ConfigBackColor)
 					if "|" in line:
+						if ConfigBackColor !="0":
+							if line.find(" Label ") > 0:
+								self.draw[draw].rectangle((POSX, current_h, POSX+MAX_W, current_h+h),fill=ConfigColor)
+							else:
+								self.draw[draw].rectangle((POSX, current_h, POSX+MAX_W, current_h+h),fill=ConfigBackColor)
 						ll = line.split("|")
 						if len(ll)==4:
 							p=[160,10.67,2.91,1.14,1.03]
@@ -12723,7 +12780,7 @@ def LCD4linuxPIC(self,session):
 						else:	
 							p=[160,10.67,2.91,1.78,1.6,1.45,1.33,1.14,1.03]
 						for x in range(len(ll)):
-							if line.find(" Label ") > 0 and ConfigBackColor !="0":
+							if line.find(" Label ") > 0 and ConfigBackColor != "0":
 								self.draw[draw].text((POSX+int(MAX_W/p[x]), current_h), ll[x].strip(), font=font, fill=ConfigBackColor)
 							else:
 								self.draw[draw].text((POSX+int(MAX_W/p[x]), current_h), ll[x].strip(), font=font, fill=ConfigColor)
@@ -12731,10 +12788,11 @@ def LCD4linuxPIC(self,session):
 		if OSCAMrunning == False:
 			font = ImageFont.truetype(FONT, ConfigSize+13, encoding='unic')
 			w,h = self.draw[draw].textsize(Code_utf8(_("OSCAM not running")), font=font)
-			self.draw[draw].rectangle((POSX, ConfigPos, POSX+MAX_W, ConfigPos+h),fill=ConfigBackColor)
+			if ConfigBackColor != "0":
+				self.draw[draw].rectangle((POSX, ConfigPos, POSX+MAX_W, ConfigPos+h),fill=ConfigBackColor)
 			self.draw[draw].text((POSX+(MAX_W-w)/2, ConfigPos), Code_utf8(_("OSCAM not running")), font=font, fill=ConfigColor)
 
-# shoe ecm.info
+# show ecm.info
 	def putECM((ConfigPos, ConfigSize, ConfigColor, ConfigBackColor, ConfigAlign, ConfigSplit), draw, im):
 		MAX_W,MAX_H = self.im[im].size
 		if ConfigSplit == True:
@@ -14343,7 +14401,7 @@ def LCD4linuxPIC(self,session):
 				Lput4(LCD4linux.MPBild2LCD.value,LCD4linux.MPBild2.value,putBild,Para)
 # Cover
 			if LCD4linux.MPCover.value !="0" and (ScreenActive[0] in LCD4linux.MPCover.value or ScreenActive[-3:] != ["","",""]):
-				Para = LCD4linux.MPCoverPos.value, LCD4linux.MPCoverSize.value, LCD4linux.MPCoverSizeH.value, LCD4linux.MPCoverAlign.value, LCD4linux.MPCoverTransp.value
+				Para = LCD4linux.MPCoverPos.value, LCD4linux.MPCoverSize.value, LCD4linux.MPCoverSizeH.value, LCD4linux.MPCoverAlign.value, LCD4linux.MPCoverTransp.value, LCD4linux.MPCoverTrim.value
 				Lput4(LCD4linux.MPCoverLCD.value,LCD4linux.MPCover.value,putCover,Para)
 			Brief1.join()
 			Brief2.join()
